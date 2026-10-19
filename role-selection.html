@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Choose Your Portal | RailConnect</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="portal-page">
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="site-logo">
+                <span class="logo-mark">RC</span>
+                <span>RailConnect</span>
+            </a>
+
+            <a href="index.html" class="header-back">
+                <span aria-hidden="true">&larr;</span> Home
+            </a>
+        </div>
+    </header>
+
+    <main class="portal-main">
+        <section class="portal-intro">
+            <span class="eyebrow">WELCOME TO RAILCONNECT</span>
+
+            <h1>How would you like to continue?</h1>
+
+            <p>
+                Select a portal to manage railway reservations
+                or access administration features.
+            </p>
+        </section>
+
+        <section class="portal-grid" aria-label="Choose a portal">
+
+            <article class="portal-card passenger-portal">
+                <div class="portal-card-top">
+                    <span class="portal-icon" aria-hidden="true">♙</span>
+                    <span class="portal-tag">FOR TRAVELLERS</span>
+                </div>
+
+                <h2>Passenger Portal</h2>
+
+                <p>
+                    Book a train, check your ticket details,
+                    view your reservations, and cancel a booking.
+                </p>
+
+                <ul class="portal-features">
+                    <li><span>✓</span> Book available seats</li>
+                    <li><span>✓</span> Check booking status</li>
+                    <li><span>✓</span> Manage your reservations</li>
+                </ul>
+
+                <a href="passenger.html" class="button button-primary portal-button">
+                    Continue as Passenger
+                    <span aria-hidden="true">&rarr;</span>
+                </a>
+            </article>
+
+            <article class="portal-card admin-portal">
+                <div class="portal-card-top">
+                    <span class="portal-icon" aria-hidden="true">▦</span>
+                    <span class="portal-tag">SYSTEM MANAGEMENT</span>
+                </div>
+
+                <h2>Admin Portal</h2>
+
+                <p>
+                    Monitor train occupancy, review passenger
+                    reservations, and manage waiting lists.
+                </p>
+
+                <ul class="portal-features">
+                    <li><span>✓</span> View train statistics</li>
+                    <li><span>✓</span> Search reservations</li>
+                    <li><span>✓</span> Manage bookings</li>
+                </ul>
+
+                <a href="admin.html" class="button button-primary portal-button">
+                    Continue as Admin
+                    <span aria-hidden="true">&rarr;</span>
+                </a>
+            </article>
+
+        </section>
+
+        <section class="available-trains-section">
+            <div class="available-trains-heading">
+                <div>
+                    <span class="eyebrow">PLAN YOUR JOURNEY</span>
+                    <h2>Available trains</h2>
+                </div>
+
+                <span class="train-count">2 trains</span>
+            </div>
+
+            <div class="available-trains-grid">
+
+                <article class="available-train-card">
+                    <div class="train-card-heading">
+                        <div>
+                            <span class="train-id">TRAIN 101</span>
+                            <h3>Coastal Express</h3>
+                        </div>
+                        <span class="train-symbol" aria-hidden="true">↗</span>
+                    </div>
+
+                    <div class="train-route-display">
+                        <div>
+                            <span class="station-caption">FROM</span>
+                            <strong>Kochi</strong>
+                        </div>
+
+                        <span class="train-route-line" aria-hidden="true"></span>
+
+                        <div class="train-destination">
+                            <span class="station-caption">TO</span>
+                            <strong>Kottayam</strong>
+                        </div>
+                    </div>
+
+                    <a href="booking.html" class="train-book-link">
+                        Book this train <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </article>
+
+                <article class="available-train-card">
+                    <div class="train-card-heading">
+                        <div>
+                            <span class="train-id">TRAIN 202</span>
+                            <h3>City Link</h3>
+                        </div>
+                        <span class="train-symbol" aria-hidden="true">↗</span>
+                    </div>
+
+                    <div class="train-route-display">
+                        <div>
+                            <span class="station-caption">FROM</span>
+                            <strong>Kochi</strong>
+                        </div>
+
+                        <span class="train-route-line" aria-hidden="true"></span>
+
+                        <div class="train-destination">
+                            <span class="station-caption">TO</span>
+                            <strong>Thrissur</strong>
+                        </div>
+                    </div>
+
+                    <a href="booking.html" class="train-book-link">
+                        Book this train <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <a href="index.html" class="footer-logo">RailConnect</a>
+            <p>Making railway reservations simpler.</p>
+            <span>&copy; 2026 RailConnect</span>
+        </div>
+    </footer>
+
+</body>
+</html>
