@@ -1,646 +1,404 @@
-/* =========================================================
-   RAILCONNECT — FRONT-END RESERVATION SYSTEM
-   ========================================================= */
 
-const STORAGE_KEY = "railConnectData";
-const TRAIN_CAPACITY = 9;
+/*
+    RailConnect - Frontend and C backend connection
+*/
 
-/* ---------- 1. Initial data ---------- */
+const API_BASE = "/api";
 
-function createInitialData() {
-    const data = {
-        trains: [
-            {
-                id: "101",
-                name: "Coastal Express",
-                source: "Kochi",
-                destination: "Kottayam",
-                capacity: TRAIN_CAPACITY,
-                ticketPrefix: "TA",
-                nextTicketNumber: 1001
-            },
-            {
-                id: "202",
-                name: "City Link",
-                source: "Kochi",
-                destination: "Thrissur",
-                capacity: TRAIN_CAPACITY,
-                ticketPrefix: "TB",
-                nextTicketNumber: 1001
-            }
-        ],
-        reservations: [],
-        nextWaitingNumber: 1001,
-        nextCreatedAt: 1
-    };
+async function readResponse(response) {
+    let data;
 
-    const coastalPassengers = [
-        ["Anu", "P101", 21],
-        ["Meera", "P102", 24],
-        ["Rahul", "P103", 22],
-        ["Arun", "P104", 25],
-        ["Diya", "P105", 20],
-        ["Nikhil", "P106", 23]
-    ];
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error("The server returned an invalid response.");
+    }
 
-    coastalPassengers.forEach((passenger, index) => {
-        const ticketNumber = 1001 + index;
-
-        data.reservations.push({
-            reference: "TA-" + ticketNumber,
-            ticketNumber,
-            name: passenger[0],
-            passengerId: passenger[1],
-            age: passenger[2],
-            trainId: "101",
-            seat: index + 1,
-            status: "Confirmed",
-            createdAt: data.nextCreatedAt++
-        });
-
-        data.trains[0].nextTicketNumber++;
-    });
-
-    const cityPassengers = [
-        ["Rahul", "P201", 22],
-        ["Akhil", "P202", 23],
-        ["Maya", "P203", 21],
-        ["Arjun", "P204", 24],
-        ["Sneha", "P205", 20],
-        ["Vishnu", "P206", 25],
-        ["Anjali", "P207", 22],
-        ["Kiran", "P208", 23],
-        ["Neha", "P209", 21]
-    ];
-
-    cityPassengers.forEach((passenger, index) => {
-        const ticketNumber = 1001 + index;
-
-        data.reservations.push({
-            reference: "TB-" + ticketNumber,
-            ticketNumber,
-            name: passenger[0],
-            passengerId: passenger[1],
-            age: passenger[2],
-            trainId: "202",
-            seat: index + 1,
-            status: "Confirmed",
-            createdAt: data.nextCreatedAt++
-        });
-
-        data.trains[1].nextTicketNumber++;
-    });
-
-    const waitingPassengers = [
-        ["Sara", "P210", 22],
-        ["John", "P211", 24],
-        ["Ammu", "P212", 20]
-    ];
-
-    waitingPassengers.forEach((passenger) => {
-        data.reservations.push({
-            reference: "WL-" + data.nextWaitingNumber++,
-            ticketNumber: null,
-            name: passenger[0],
-            passengerId: passenger[1],
-            age: passenger[2],
-            trainId: "202",
-            seat: null,
-            status: "Waiting List",
-            createdAt: data.nextCreatedAt++
-        });
-    });
+    if (!response.ok) {
+        throw new Error(
+            data.message || "The server could not complete the request."
+        );
+    }
 
     return data;
 }
 
-/* ---------- 2. Save and load data ---------- */
-
-function saveRailwayData(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+async function apiGet(endpoint) {
+    const response = await fetch(API_BASE + endpoint);
+    return await readResponse(response);
 }
 
-function getRailwayData() {
-    const savedData = localStorage.getItem(STORAGE_KEY);
+async function apiPost(endpoint, data) {
+    const formData = new URLSearchParams();
 
-    if (savedData) {
+    for (const key in data) {
+        formData.append(key, data[key]);
+    }
+
+    const response = await fetch(API_BASE + endpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: formData.toString()
+    });
+
+    return await readResponse(response);
+}
+
+async function getRailwayState() {
+    return await apiGet("/state");
+}
+
+async function bookTicket(bookingData) {
+    return await apiPost("/book", bookingData);
+}
+
+async function searchBooking(ticketNumber) {
+    return await apiGet(
+        "/search?ticket=" + encodeURIComponent(ticketNumber)
+    );
+}
+
+async function cancelBooking(ticketNumber) {
+    return await apiPost("/cancel", {
+        ticket: ticketNumber
+    });
+}
+
+/* Booking page behaviour */
+document.addEventListener("DOMContentLoaded", function () {
+    const bookingForm = document.getElementById("bookingForm");
+
+    /* Other pages can use the shared API functions above. */
+    if (!bookingForm) {
+        return;
+    }
+
+    const serverMessage = document.getElementById("serverMessage");
+    const sourceSelect = document.getElementById("source");
+    const destinationSelect = document.getElementById("destination");
+    const trainSelect = document.getElementById("trainSelect");
+
+    const findTrainsButton =
+        document.getElementById("findTrainsButton");
+
+    const bookTicketButton =
+        document.getElementById("bookTicketButton");
+
+    const trainSearchMessage =
+        document.getElementById("trainSearchMessage");
+
+    const trainSummary = document.getElementById("trainSummary");
+
+    const selectedTrainName =
+        document.getElementById("selectedTrainName");
+
+    const selectedTrainRoute =
+        document.getElementById("selectedTrainRoute");
+
+    const selectedTrainSeats =
+        document.getElementById("selectedTrainSeats");
+
+    const bookingResult =
+        document.getElementById("bookingResult");
+
+    const resultHeading =
+        document.getElementById("resultHeading");
+
+    const resultMessage =
+        document.getElementById("resultMessage");
+
+    const resultTicket =
+        document.getElementById("resultTicket");
+
+    const resultSeat =
+        document.getElementById("resultSeat");
+
+    const resultStatus =
+        document.getElementById("resultStatus");
+
+    const newBookingButton =
+        document.getElementById("newBookingButton");
+
+    let trains = [];
+    let serverReady = false;
+
+    function showMessage(element, message, type) {
+        element.textContent = message;
+        element.className = "message";
+
+        if (type) {
+            element.classList.add(type);
+        }
+
+        element.hidden = false;
+    }
+
+    function resetTrainSelection() {
+        trainSelect.innerHTML =
+            '<option value="">Find trains for your route first</option>';
+
+        trainSelect.disabled = true;
+        bookTicketButton.disabled = true;
+        trainSummary.hidden = true;
+    }
+
+    function resetSearchResults() {
+        trainSearchMessage.hidden = true;
+        resetTrainSelection();
+    }
+
+    function getSelectedTrain() {
+        const trainId = Number(trainSelect.value);
+
+        return trains.find(function (train) {
+            return train.id === trainId;
+        });
+    }
+
+    function updateTrainSummary() {
+        const train = getSelectedTrain();
+
+        if (!train) {
+            trainSummary.hidden = true;
+            bookTicketButton.disabled = true;
+            return;
+        }
+
+        selectedTrainName.textContent =
+            train.name + " (Train " + train.id + ")";
+
+        selectedTrainRoute.textContent =
+            train.source + " → " + train.destination;
+
+        selectedTrainSeats.textContent =
+            "Available seats: " + train.available +
+            " / " + train.capacity;
+
+        selectedTrainSeats.className =
+            train.available > 0
+                ? "availability"
+                : "availability full";
+
+        trainSummary.hidden = false;
+        bookTicketButton.disabled = false;
+    }
+
+    async function loadTrains() {
+        serverReady = false;
+
         try {
-            const data = JSON.parse(savedData);
+            const data = await getRailwayState();
 
-            if (
-                Array.isArray(data.trains) &&
-                Array.isArray(data.reservations)
-            ) {
-                data.trains.forEach((train) => {
-                    if (!train.ticketPrefix) {
-                        train.ticketPrefix =
-                            train.id === "101" ? "TA" : "TB";
-                    }
-
-                    if (!Number.isInteger(train.nextTicketNumber)) {
-                        const numbers = data.reservations
-                            .filter(
-                                (reservation) =>
-                                    reservation.trainId === train.id &&
-                                    Number.isInteger(
-                                        reservation.ticketNumber
-                                    )
-                            )
-                            .map(
-                                (reservation) =>
-                                    reservation.ticketNumber
-                            );
-
-                        train.nextTicketNumber = Math.max(
-                            1001,
-                            ...numbers.map((number) => number + 1)
-                        );
-                    }
-                });
-
-                if (!Number.isInteger(data.nextWaitingNumber)) {
-                    const waitingNumbers = data.reservations
-                        .map((reservation) => {
-                            const match = String(
-                                reservation.reference || ""
-                            ).match(/^WL-(\d+)$/i);
-
-                            return match ? Number(match[1]) : 1000;
-                        });
-
-                    data.nextWaitingNumber = Math.max(
-                        1001,
-                        ...waitingNumbers.map((number) => number + 1)
-                    );
-                }
-
-                if (!Number.isInteger(data.nextCreatedAt)) {
-                    data.nextCreatedAt =
-                        data.reservations.reduce(
-                            (maximum, reservation) =>
-                                Math.max(
-                                    maximum,
-                                    reservation.createdAt || 0
-                                ),
-                            0
-                        ) + 1;
-                }
-
-                return data;
+            if (!Array.isArray(data.trains)) {
+                throw new Error("Train information is missing.");
             }
+
+            trains = data.trains;
+            serverReady = true;
+
+            showMessage(
+                serverMessage,
+                "Connected to the reservation server. You can book a ticket.",
+                "success"
+            );
         } catch (error) {
-            console.error(
-                "Could not read saved railway data:",
-                error
+            showMessage(
+                serverMessage,
+                "Cannot connect to the C backend. Start the server and reload this page. " +
+                    error.message,
+                "error"
             );
         }
     }
 
-    const data = createInitialData();
-    saveRailwayData(data);
+    findTrainsButton.addEventListener("click", function () {
+        resetSearchResults();
 
-    return data;
-}
-
-/* ---------- 3. Train information ---------- */
-
-function getAllTrains() {
-    return getRailwayData().trains;
-}
-
-function getTrainById(trainId) {
-    return (
-        getRailwayData().trains.find(
-            (train) => train.id === String(trainId)
-        ) || null
-    );
-}
-
-function getTrainName(trainId) {
-    const train = getTrainById(trainId);
-    return train ? train.name : "Unknown train";
-}
-
-function getTrainReservations(trainId) {
-    return getRailwayData().reservations
-        .filter(
-            (reservation) =>
-                reservation.trainId === String(trainId)
-        )
-        .sort((a, b) => a.createdAt - b.createdAt);
-}
-
-function getConfirmedReservations(trainId) {
-    return getTrainReservations(trainId).filter(
-        (reservation) => reservation.status === "Confirmed"
-    );
-}
-
-function getWaitingReservations(trainId) {
-    return getTrainReservations(trainId).filter(
-        (reservation) => reservation.status === "Waiting List"
-    );
-}
-
-function getAvailableSeats(trainId) {
-    const train = getTrainById(trainId);
-
-    if (!train) {
-        return [];
-    }
-
-    const occupiedSeats = getConfirmedReservations(trainId).map(
-        (reservation) => reservation.seat
-    );
-
-    const availableSeats = [];
-
-    for (let seat = 1; seat <= train.capacity; seat++) {
-        if (!occupiedSeats.includes(seat)) {
-            availableSeats.push(seat);
-        }
-    }
-
-    return availableSeats;
-}
-
-function getTrainSummary(trainId) {
-    const train = getTrainById(trainId);
-
-    if (!train) {
-        return null;
-    }
-
-    const confirmed = getConfirmedReservations(trainId);
-    const waiting = getWaitingReservations(trainId);
-    const available = getAvailableSeats(trainId);
-
-    return {
-        train,
-        totalPassengers: confirmed.length + waiting.length,
-        confirmedPassengers: confirmed.length,
-        availableSeats: available.length,
-        availableSeatNumbers: available,
-        waitingPassengers: waiting.length
-    };
-}
-
-function getRailwayState() {
-    const data = getRailwayData();
-
-    return {
-        trains: data.trains,
-        reservations: data.reservations,
-        totalPassengers: data.reservations.filter(
-            (reservation) =>
-                reservation.status === "Confirmed" ||
-                reservation.status === "Waiting List"
-        ).length,
-        confirmedTickets: data.reservations.filter(
-            (reservation) =>
-                reservation.status === "Confirmed"
-        ).length,
-        waitingPassengers: data.reservations.filter(
-            (reservation) =>
-                reservation.status === "Waiting List"
-        ).length
-    };
-}
-
-/* ---------- 4. Ticket number generation ---------- */
-
-function generateTicketNumber(data, train) {
-    const ticketNumber = train.nextTicketNumber;
-    train.nextTicketNumber++;
-
-    return {
-        ticketNumber,
-        reference: train.ticketPrefix + "-" + ticketNumber
-    };
-}
-
-function generateWaitingReference(data) {
-    const reference = "WL-" + data.nextWaitingNumber;
-    data.nextWaitingNumber++;
-
-    return reference;
-}
-
-/* ---------- 5. Book a ticket ---------- */
-
-function bookTicket(bookingData) {
-    if (!bookingData) {
-        return {
-            success: false,
-            message: "Booking details are missing."
-        };
-    }
-
-    const name = String(bookingData.name || "").trim();
-    const passengerId = String(
-        bookingData.passengerId || ""
-    ).trim();
-    const age = Number(bookingData.age);
-    const trainId = String(bookingData.trainId || "");
-
-    if (!name || !passengerId) {
-        return {
-            success: false,
-            message: "Enter the passenger name and Passenger ID."
-        };
-    }
-
-    if (!Number.isInteger(age) || age < 1 || age > 120) {
-        return {
-            success: false,
-            message: "Age must be between 1 and 120."
-        };
-    }
-
-    const data = getRailwayData();
-
-    const train = data.trains.find(
-        (item) => item.id === trainId
-    );
-
-    if (!train) {
-        return {
-            success: false,
-            message: "Please select a valid train."
-        };
-    }
-
-    /* Check for duplicate Passenger ID on this train.
-       Cancelled reservations do not block a new booking. */
-
-    const duplicate = data.reservations.find(
-        (reservation) =>
-            reservation.trainId === trainId &&
-            reservation.passengerId.trim().toLowerCase() ===
-                passengerId.toLowerCase() &&
-            (
-                reservation.status === "Confirmed" ||
-                reservation.status === "Waiting List"
-            )
-    );
-
-    if (duplicate) {
-        return {
-            success: false,
-            duplicate: true,
-            message:
-                "Passenger ID " + passengerId +
-                " already has an active reservation on this train. " +
-                "Please try again with a different Passenger ID."
-        };
-    }
-
-    const availableSeats = getAvailableSeats(trainId);
-
-    /* If a seat is available, confirm the booking. */
-
-    if (availableSeats.length > 0) {
-        const ticket = generateTicketNumber(data, train);
-
-        const reservation = {
-            reference: ticket.reference,
-            ticketNumber: ticket.ticketNumber,
-            name,
-            passengerId,
-            age,
-            trainId,
-            seat: availableSeats[0],
-            status: "Confirmed",
-            createdAt: data.nextCreatedAt++
-        };
-
-        data.reservations.push(reservation);
-        saveRailwayData(data);
-
-        return {
-            success: true,
-            status: "Confirmed",
-            message: "Ticket booked successfully!",
-            reference: reservation.reference,
-            ticket: reservation.reference,
-            ticketNumber: reservation.ticketNumber,
-            seat: reservation.seat,
-            reservation
-        };
-    }
-
-    /* Train is full: ask before changing any data. */
-
-    const joinWaitingList = window.confirm(
-        "Sorry, " + train.name + " is fully booked.\n\n" +
-        "Would you like to join the waiting list?\n\n" +
-        "Choose OK to join the waiting list.\n" +
-        "Choose Cancel to stop the booking."
-    );
-
-    if (!joinWaitingList) {
-        return {
-            success: false,
-            declinedWaitingList: true,
-            message:
-                "Booking cancelled. You were not added to the waiting list."
-        };
-    }
-
-    /* Only create a waiting reservation after confirmation. */
-
-    const reservation = {
-        reference: generateWaitingReference(data),
-        ticketNumber: null,
-        name,
-        passengerId,
-        age,
-        trainId,
-        seat: null,
-        status: "Waiting List",
-        createdAt: data.nextCreatedAt++
-    };
-
-    data.reservations.push(reservation);
-    saveRailwayData(data);
-
-    return {
-        success: true,
-        status: "Waiting List",
-        message:
-            "You have been added to the waiting list. " +
-            "Your waiting-list reference is " +
-            reservation.reference + ".",
-        reference: reservation.reference,
-        ticket: null,
-        ticketNumber: null,
-        seat: null,
-        reservation
-    };
-}
-
-/* ---------- 6. Search reservations ---------- */
-
-function searchBooking(reference) {
-    const searchValue = String(reference || "")
-        .trim()
-        .toLowerCase();
-
-    if (!searchValue) {
-        return null;
-    }
-
-    const data = getRailwayData();
-
-    return (
-        data.reservations.find((reservation) => {
-            return (
-                String(reservation.reference).toLowerCase() ===
-                    searchValue ||
-                (
-                    reservation.ticketNumber !== null &&
-                    String(reservation.ticketNumber) === searchValue
-                )
+        if (!serverReady) {
+            showMessage(
+                trainSearchMessage,
+                "The reservation server is not connected. Start the C server first.",
+                "error"
             );
-        }) || null
-    );
-}
+            return;
+        }
 
-function getBookingsByPassengerId(passengerId) {
-    const searchValue = String(passengerId || "")
-        .trim()
-        .toLowerCase();
+        const source = sourceSelect.value;
+        const destination = destinationSelect.value;
 
-    if (!searchValue) {
-        return [];
-    }
+        if (!source || !destination) {
+            showMessage(
+                trainSearchMessage,
+                "Please select both departure and destination stations.",
+                "error"
+            );
+            return;
+        }
 
-    return getRailwayData().reservations
-        .filter(
-            (reservation) =>
-                reservation.passengerId.toLowerCase() ===
-                searchValue
-        )
-        .sort((a, b) => a.createdAt - b.createdAt);
-}
+        if (source === destination) {
+            showMessage(
+                trainSearchMessage,
+                "Departure and destination must be different.",
+                "error"
+            );
+            return;
+        }
 
-function getReservationStatus(reference) {
-    const reservation = searchBooking(reference);
+        const matchingTrains = trains.filter(function (train) {
+            return train.source === source &&
+                   train.destination === destination;
+        });
 
-    return reservation ? reservation.status : "Not found";
-}
+        if (matchingTrains.length === 0) {
+            showMessage(
+                trainSearchMessage,
+                "No predefined train serves this route. Try Kochi to Kottayam or Kochi to Thrissur.",
+                "error"
+            );
+            return;
+        }
 
-/* ---------- 7. Cancel a booking ---------- */
+        trainSelect.innerHTML =
+            '<option value="">Choose a train</option>';
 
-function cancelBooking(reference) {
-    const searchValue = String(reference || "")
-        .trim()
-        .toLowerCase();
+        matchingTrains.forEach(function (train) {
+            const option = document.createElement("option");
 
-    if (!searchValue) {
-        return {
-            success: false,
-            message: "Enter a ticket number or booking reference."
-        };
-    }
+            option.value = train.id;
+            option.textContent =
+                train.name + " (" + train.id + ") — " +
+                train.available + " seats available";
 
-    const data = getRailwayData();
+            trainSelect.appendChild(option);
+        });
 
-    const reservation = data.reservations.find((item) => {
-        return (
-            String(item.reference).toLowerCase() === searchValue ||
-            (
-                item.ticketNumber !== null &&
-                String(item.ticketNumber) === searchValue
-            )
+        trainSelect.disabled = false;
+
+        showMessage(
+            trainSearchMessage,
+            matchingTrains.length + " matching train(s) found.",
+            "success"
         );
     });
 
-    if (!reservation) {
-        return {
-            success: false,
-            message: "Reservation not found."
-        };
-    }
+    sourceSelect.addEventListener("change", resetSearchResults);
+    destinationSelect.addEventListener("change", resetSearchResults);
 
-    if (
-        reservation.status !== "Confirmed" &&
-        reservation.status !== "Waiting List"
-    ) {
-        return {
-            success: false,
-            message: "This reservation has already been cancelled."
-        };
-    }
+    trainSelect.addEventListener("change", updateTrainSummary);
 
-    const wasConfirmed = reservation.status === "Confirmed";
-    const trainId = reservation.trainId;
-    const releasedSeat = reservation.seat;
+    bookingForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
 
-    reservation.status = "Cancelled";
-    reservation.seat = null;
+        if (!serverReady) {
+            showMessage(
+                serverMessage,
+                "The C backend is not connected. Start the server and try again.",
+                "error"
+            );
+            return;
+        }
 
-    if (wasConfirmed) {
-        /* FIFO: promote the earliest waiting passenger. */
+        const train = getSelectedTrain();
 
-        const nextPassenger = data.reservations
-            .filter(
-                (item) =>
-                    item.trainId === trainId &&
-                    item.status === "Waiting List"
-            )
-            .sort((a, b) => a.createdAt - b.createdAt)[0];
+        if (!train) {
+            showMessage(
+                trainSearchMessage,
+                "Find trains and select one before confirming your booking.",
+                "error"
+            );
+            return;
+        }
 
-        if (nextPassenger) {
-            const train = data.trains.find(
-                (item) => item.id === trainId
+        const name =
+            document.getElementById("passengerName").value.trim();
+
+        const passengerId =
+            document.getElementById("passengerId").value.trim();
+
+        const age =
+            Number(document.getElementById("passengerAge").value);
+
+        if (!name || !passengerId || age < 1 || age > 120) {
+            showMessage(
+                serverMessage,
+                "Please enter a valid name, Passenger ID, and age.",
+                "error"
+            );
+            return;
+        }
+
+        bookTicketButton.disabled = true;
+        bookTicketButton.textContent = "Processing booking...";
+
+        try {
+            const result = await bookTicket({
+                name: name,
+                passengerId: passengerId,
+                age: age,
+                trainId: train.id
+            });
+
+            resultHeading.textContent =
+                result.status === "Confirmed"
+                    ? "Your ticket is confirmed!"
+                    : "You have been added to the waiting list.";
+
+            resultMessage.textContent = result.message;
+
+            /* Ticket number comes from the C backend. */
+            resultTicket.textContent = result.ticket;
+
+            resultSeat.textContent =
+                result.seat > 0
+                    ? "Assigned seat: " + result.seat
+                    : "No seat assigned yet.";
+
+            resultStatus.textContent =
+                "Booking status: " + result.status;
+
+            bookingResult.className = "result-panel";
+            bookingResult.hidden = false;
+
+            showMessage(
+                serverMessage,
+                "Booking processed successfully.",
+                "success"
             );
 
-            const ticket = generateTicketNumber(data, train);
+            bookingResult.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
 
-            nextPassenger.status = "Confirmed";
-            nextPassenger.seat = releasedSeat;
-            nextPassenger.ticketNumber = ticket.ticketNumber;
-            nextPassenger.reference = ticket.reference;
+            /* Refresh the availability after booking. */
+            const data = await getRailwayState();
+            trains = data.trains;
+            updateTrainSummary();
 
-            saveRailwayData(data);
-
-            return {
-                success: true,
-                message:
-                    "Booking cancelled successfully. " +
-                    nextPassenger.name +
-                    " was promoted from the waiting list and assigned " +
-                    "seat " + releasedSeat +
-                    ". New ticket reference: " + ticket.reference + ".",
-                cancelled: reservation,
-                promoted: nextPassenger
-            };
+        } catch (error) {
+            showMessage(
+                serverMessage,
+                "Booking failed: " + error.message,
+                "error"
+            );
+        } finally {
+            bookTicketButton.textContent = "Confirm booking";
+            bookTicketButton.disabled = !getSelectedTrain();
         }
-    }
+    });
 
-    saveRailwayData(data);
+    newBookingButton.addEventListener("click", function () {
+        bookingForm.reset();
+        bookingResult.hidden = true;
+        resetSearchResults();
 
-    return {
-        success: true,
-        message: wasConfirmed
-            ? "Booking cancelled. Seat " + releasedSeat +
-              " is now available."
-            : "Waiting-list reservation cancelled successfully.",
-        cancelled: reservation,
-        promoted: null
-    };
-}
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
 
-/* ---------- 8. Reset demo data ---------- */
-
-function resetRailwayDemoData() {
-    const data = createInitialData();
-
-    saveRailwayData(data);
-
-    return {
-        success: true,
-        message: "Demo reservations have been reset."
-    };
-}
+    loadTrains();
+});

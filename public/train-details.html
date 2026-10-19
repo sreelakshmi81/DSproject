@@ -5,313 +5,392 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Train Details | RailConnect</title>
-
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="header-inner">
-            <a href="index.html" class="site-logo">
-                <span class="logo-mark">RC</span>
-                <span>RailConnect</span>
-            </a>
 
-            <nav class="main-navigation">
-                <a href="admin.html">Admin Dashboard</a>
-                <a href="index.html">Home</a>
-            </nav>
-        </div>
+    <header class="header">
+        <h2>RailConnect</h2>
+        <p>Train Details | Admin</p>
     </header>
 
     <main class="page-container">
-        <section class="page-title">
-            <span class="eyebrow">FLEET MANAGEMENT</span>
-            <h1 id="trainTitle">Train details</h1>
-            <p id="trainRoute">Loading train information...</p>
-        </section>
 
-        <section class="admin-stats-grid" aria-label="Train statistics">
-            <article class="dashboard-card stat-card">
-                <span class="stat-label">Total Reservations</span>
-                <strong id="totalPassengers" class="stat-value">—</strong>
-                <span class="stat-caption">Confirmed and waiting</span>
-            </article>
+        <h1 class="page-title" id="trainTitle">Train Details</h1>
 
-            <article class="dashboard-card stat-card">
-                <span class="stat-label">Confirmed</span>
-                <strong id="confirmedCount" class="stat-value">—</strong>
-                <span class="stat-caption">Seats assigned</span>
-            </article>
+        <p class="page-description" id="trainRoute">
+            Loading train information...
+        </p>
 
-            <article class="dashboard-card stat-card">
-                <span class="stat-label">Available Seats</span>
-                <strong id="availableCount" class="stat-value">—</strong>
-                <span class="stat-caption">Ready for booking</span>
-            </article>
+        <!-- Train statistics -->
+        <section class="stats-grid">
 
-            <article class="dashboard-card stat-card">
-                <span class="stat-label">Waiting List</span>
-                <strong id="waitingCount" class="stat-value">—</strong>
-                <span class="stat-caption">Waiting for seats</span>
-            </article>
-        </section>
-
-        <section class="dashboard-card train-detail-section">
-            <div class="table-heading">
-                <div>
-                    <span class="eyebrow">CONFIRMED RESERVATIONS</span>
-                    <h2>Passenger manifest</h2>
-                </div>
+            <div class="stat-card">
+                <h3>Total Active Passengers</h3>
+                <p class="stat-number" id="totalPassengers">0</p>
             </div>
 
-            <div class="table-responsive">
+            <div class="stat-card">
+                <h3>Confirmed Tickets</h3>
+                <p class="stat-number" id="confirmedCount">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Available Seats</h3>
+                <p class="stat-number" id="availableCount">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Waiting List</h3>
+                <p class="stat-number" id="waitingCount">0</p>
+            </div>
+
+        </section>
+
+        <!-- Confirmed passengers -->
+        <section style="margin-top: 35px;">
+
+            <h2 class="page-title">Confirmed Passengers</h2>
+
+            <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>Ticket Reference</th>
-                            <th>Passenger ID</th>
+                            <th>Ticket No.</th>
                             <th>Passenger Name</th>
                             <th>Age</th>
-                            <th>Seat Number</th>
+                            <th>Seat No.</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
                     <tbody id="confirmedTable">
-                        <tr>
-                            <td colspan="5">Loading reservations...</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
+
         </section>
 
-        <section class="dashboard-card train-detail-section">
-            <span class="eyebrow">SEAT INVENTORY</span>
-            <h2>Available seat numbers</h2>
-            <p id="availableSeatNumbers">Loading available seats...</p>
+        <!-- Available seats -->
+        <section class="dashboard-card" style="margin-top: 30px;">
+
+            <h2 class="page-title">Available Seats</h2>
+
+            <p id="availableSeatNumbers">
+                No seat information available.
+            </p>
+
         </section>
 
-        <section class="dashboard-card train-detail-section">
-            <div class="table-heading">
-                <div>
-                    <span class="eyebrow">WAITING LIST</span>
-                    <h2>Passengers awaiting confirmation</h2>
-                </div>
-            </div>
+        <!-- Waiting list -->
+        <section style="margin-top: 35px;">
 
-            <div class="table-responsive">
+            <h2 class="page-title">Waiting List (FIFO)</h2>
+
+            <p class="page-description">
+                The passenger who joined first will receive the next
+                available seat when a confirmed ticket is cancelled.
+            </p>
+
+            <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>Waiting Reference</th>
-                            <th>Passenger ID</th>
+                            <th>Queue Position</th>
+                            <th>Ticket No.</th>
                             <th>Passenger Name</th>
                             <th>Age</th>
-                            <th>Queue Position</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
                     <tbody id="waitingTable">
-                        <tr>
-                            <td colspan="5">Loading waiting list...</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
+
         </section>
 
         <p id="message" role="status"></p>
 
-        <div class="result-actions">
-            <a href="admin.html" class="button button-secondary">
-                ← Back to Admin Dashboard
-            </a>
-
-            <a href="booking.html" class="button button-primary">
-                Make a Reservation
-            </a>
+        <div class="action-buttons">
+            <button
+                class="secondary-button"
+                onclick="window.location.href='admin.html'"
+            >
+                Back to Admin Dashboard
+            </button>
         </div>
+
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <a href="index.html" class="footer-logo">RailConnect</a>
-            <p>Making railway reservations simpler.</p>
-            <span>&copy; 2026 RailConnect</span>
-        </div>
+    <footer class="footer">
+        <p>RailConnect | Railway Reservation System</p>
     </footer>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const params = new URLSearchParams(window.location.search);
-            const trainId = params.get("train");
+        /*
+          Temporary demonstration data.
+          These records will later come from the C backend.
+        */
 
-            const confirmedTable = document.getElementById("confirmedTable");
-            const waitingTable = document.getElementById("waitingTable");
-            const message = document.getElementById("message");
+        const trainData = {
+            "101": {
+                id: "101",
+                name: "Coastal Express",
+                source: "Kochi",
+                destination: "Kottayam",
+                capacity: 5,
+                confirmed: [
+                    {
+                        ticket: 1001,
+                        name: "Anu",
+                        age: 21,
+                        seat: 1
+                    },
+                    {
+                        ticket: 1002,
+                        name: "Meera",
+                        age: 22,
+                        seat: 2
+                    },
+                    {
+                        ticket: 1005,
+                        name: "Rahul",
+                        age: 24,
+                        seat: 3
+                    },
+                    {
+                        ticket: 1006,
+                        name: "Arun",
+                        age: 20,
+                        seat: 4
+                    },
+                    {
+                        ticket: 1007,
+                        name: "Diya",
+                        age: 23,
+                        seat: 5
+                    }
+                ],
+                waiting: [
+                    {
+                        ticket: 1008,
+                        name: "Nikhil",
+                        age: 22
+                    },
+                    {
+                        ticket: 1009,
+                        name: "Sara",
+                        age: 21
+                    }
+                ]
+            },
 
-            function setText(id, value) {
-                document.getElementById(id).textContent = value;
+            "202": {
+                id: "202",
+                name: "City Link",
+                source: "Kochi",
+                destination: "Thrissur",
+                capacity: 5,
+                confirmed: [
+                    {
+                        ticket: 1003,
+                        name: "Rahul",
+                        age: 24,
+                        seat: 1
+                    },
+                    {
+                        ticket: 1010,
+                        name: "Akhil",
+                        age: 20,
+                        seat: 2
+                    },
+                    {
+                        ticket: 1011,
+                        name: "Maya",
+                        age: 22,
+                        seat: 3
+                    }
+                ],
+                waiting: []
             }
+        };
 
-            function createCell(value) {
-                const cell = document.createElement("td");
-                cell.textContent =
-                    value === null || value === undefined
-                        ? "—"
-                        : String(value);
+        const params = new URLSearchParams(window.location.search);
+        const trainId = params.get("train");
 
-                return cell;
-            }
+        const train = trainData[trainId];
 
-            function showTableMessage(table, columns, text) {
-                table.innerHTML = "";
+        function makeCell(row, value) {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.appendChild(cell);
+        }
 
-                const row = document.createElement("tr");
-                const cell = document.createElement("td");
+        function createCancelButton(ticketNumber, row) {
+            const cell = document.createElement("td");
+            const button = document.createElement("button");
 
-                cell.colSpan = columns;
-                cell.textContent = text;
+            button.textContent = "Cancel";
+            button.className = "cancel-button";
 
-                row.appendChild(cell);
-                table.appendChild(row);
-            }
+            button.addEventListener("click", function() {
+                cancelTicket(ticketNumber);
+            });
 
-            if (!trainId) {
-                setText("trainTitle", "Train not selected");
-                setText("trainRoute", "Choose a train from the admin dashboard.");
+            cell.appendChild(button);
+            row.appendChild(cell);
+        }
 
-                showTableMessage(
-                    confirmedTable,
-                    5,
-                    "No train was specified."
-                );
-
-                showTableMessage(
-                    waitingTable,
-                    5,
-                    "No train was specified."
-                );
-
-                setText("availableSeatNumbers", "—");
-                message.textContent =
-                    "Open this page from the admin dashboard and select a train.";
-
-                return;
-            }
-
-            const train = getTrainById(trainId);
-
+        function displayTrainDetails() {
             if (!train) {
-                setText("trainTitle", "Train not found");
-                setText("trainRoute", "The selected train does not exist.");
+                document.getElementById("trainTitle").textContent =
+                    "Train Not Found";
 
-                showTableMessage(
-                    confirmedTable,
-                    5,
-                    "Train not found."
-                );
-
-                showTableMessage(
-                    waitingTable,
-                    5,
-                    "Train not found."
-                );
-
-                setText("availableSeatNumbers", "—");
-                message.textContent = "Please return to the admin dashboard.";
+                document.getElementById("trainRoute").textContent =
+                    "Please return to the admin dashboard and select a train.";
 
                 return;
             }
 
-            function refreshTrainDetails() {
-                const summary = getTrainSummary(trainId);
-                const confirmed = getConfirmedReservations(trainId);
-                const waiting = getWaitingReservations(trainId);
+            document.getElementById("trainTitle").textContent =
+                train.id + " - " + train.name;
 
-                setText(
-                    "trainTitle",
-                    train.name + " · Train " + train.id
-                );
+            document.getElementById("trainRoute").textContent =
+                "Route: " + train.source + " to " + train.destination;
 
-                setText(
-                    "trainRoute",
-                    train.source + " → " + train.destination
-                );
+            const confirmedCount = train.confirmed.length;
+            const waitingCount = train.waiting.length;
+            const availableCount = train.capacity - confirmedCount;
 
-                setText(
-                    "totalPassengers",
-                    summary.confirmedPassengers + summary.waitingPassengers
-                );
+            document.getElementById("totalPassengers").textContent =
+                confirmedCount + waitingCount;
 
-                setText("confirmedCount", summary.confirmedPassengers);
-                setText("availableCount", summary.availableSeats);
-                setText("waitingCount", summary.waitingPassengers);
+            document.getElementById("confirmedCount").textContent =
+                confirmedCount;
 
-                if (confirmed.length === 0) {
-                    showTableMessage(
-                        confirmedTable,
-                        5,
-                        "There are no confirmed reservations for this train."
-                    );
-                } else {
-                    confirmedTable.innerHTML = "";
+            document.getElementById("availableCount").textContent =
+                availableCount;
 
-                    confirmed.forEach(function (booking) {
-                        const row = document.createElement("tr");
+            document.getElementById("waitingCount").textContent =
+                waitingCount;
 
-                        row.appendChild(createCell(booking.reference));
-                        row.appendChild(createCell(booking.passengerId));
-                        row.appendChild(createCell(booking.name));
-                        row.appendChild(createCell(booking.age));
-                        row.appendChild(createCell(booking.seat));
+            displayConfirmedPassengers();
+            displayAvailableSeats();
+            displayWaitingPassengers();
+        }
 
-                        confirmedTable.appendChild(row);
-                    });
-                }
+        function displayConfirmedPassengers() {
+            const table = document.getElementById("confirmedTable");
+            table.innerHTML = "";
 
-                if (summary.availableSeatNumbers.length === 0) {
-                    setText(
-                        "availableSeatNumbers",
-                        "No seats are currently available."
-                    );
-                } else {
-                    setText(
-                        "availableSeatNumbers",
-                        summary.availableSeatNumbers.join(", ")
-                    );
-                }
-
-                if (waiting.length === 0) {
-                    showTableMessage(
-                        waitingTable,
-                        5,
-                        "There are no passengers on the waiting list."
-                    );
-                } else {
-                    waitingTable.innerHTML = "";
-
-                    waiting.forEach(function (booking, index) {
-                        const row = document.createElement("tr");
-
-                        row.appendChild(createCell(booking.reference));
-                        row.appendChild(createCell(booking.passengerId));
-                        row.appendChild(createCell(booking.name));
-                        row.appendChild(createCell(booking.age));
-                        row.appendChild(createCell(index + 1));
-
-                        waitingTable.appendChild(row);
-                    });
-                }
-
-                message.textContent =
-                    "Train information loaded successfully.";
+            if (train.confirmed.length === 0) {
+                table.innerHTML =
+                    '<tr><td colspan="5">No confirmed passengers.</td></tr>';
+                return;
             }
 
-            refreshTrainDetails();
-        });
+            train.confirmed.forEach(function(passenger) {
+                const row = document.createElement("tr");
+
+                makeCell(row, passenger.ticket);
+                makeCell(row, passenger.name);
+                makeCell(row, passenger.age);
+                makeCell(row, passenger.seat);
+
+                createCancelButton(passenger.ticket, row);
+
+                table.appendChild(row);
+            });
+        }
+
+        function displayAvailableSeats() {
+            const occupiedSeats = train.confirmed.map(function(passenger) {
+                return passenger.seat;
+            });
+
+            const freeSeats = [];
+
+            for (let seat = 1; seat <= train.capacity; seat++) {
+                if (!occupiedSeats.includes(seat)) {
+                    freeSeats.push(seat);
+                }
+            }
+
+            document.getElementById("availableSeatNumbers").textContent =
+                freeSeats.length > 0
+                    ? "Free seat numbers: " + freeSeats.join(", ")
+                    : "No seats are currently available.";
+        }
+
+        function displayWaitingPassengers() {
+            const table = document.getElementById("waitingTable");
+            table.innerHTML = "";
+
+            if (train.waiting.length === 0) {
+                table.innerHTML =
+                    '<tr><td colspan="5">No passengers in the waiting list.</td></tr>';
+                return;
+            }
+
+            train.waiting.forEach(function(passenger, index) {
+                const row = document.createElement("tr");
+
+                makeCell(row, index + 1);
+                makeCell(row, passenger.ticket);
+                makeCell(row, passenger.name);
+                makeCell(row, passenger.age);
+
+                createCancelButton(passenger.ticket, row);
+
+                table.appendChild(row);
+            });
+        }
+
+        function cancelTicket(ticketNumber) {
+            if (!train) {
+                return;
+            }
+
+            const confirmedIndex = train.confirmed.findIndex(
+                function(passenger) {
+                    return passenger.ticket === ticketNumber;
+                }
+            );
+
+            const waitingIndex = train.waiting.findIndex(
+                function(passenger) {
+                    return passenger.ticket === ticketNumber;
+                }
+            );
+
+            const passenger =
+                confirmedIndex !== -1
+                    ? train.confirmed[confirmedIndex]
+                    : train.waiting[waitingIndex];
+
+            if (!passenger) {
+                return;
+            }
+
+            const okay = window.confirm(
+                "Cancel ticket " + ticketNumber +
+                " for " + passenger.name + "?"
+            );
+
+            if (!okay) {
+                return;
+            }
+
+            document.getElementById("message").textContent =
+                "Demonstration only: actual cancellation and waiting-list " +
+                "promotion will be implemented in the C backend.";
+        }
+
+        displayTrainDetails();
     </script>
+
 </body>
 </html>

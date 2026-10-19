@@ -4,427 +4,824 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Book a Ticket | RailConnect</title>
 
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
+
+    <style>
+        /* =========================
+           GENERAL
+        ========================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6fb;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* =========================
+           HEADER AND BRAND
+        ========================= */
+
+        .main-header {
+            min-height: 82px;
+            padding: 15px 6%;
+            background: #102a43;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+            flex-wrap: wrap;
+            box-shadow: 0 3px 15px rgba(16, 42, 67, 0.12);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .brand-mark {
+            width: 49px;
+            height: 49px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #254761;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 14px;
+            font-size: 26px;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 23px;
+            letter-spacing: 0.2px;
+            color: white;
+        }
+
+        .brand p {
+            margin: 1px 0 0;
+            font-size: 12px;
+            color: #d9e7f5;
+        }
+
+        .main-header nav {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .main-header nav a {
+            padding: 10px 13px;
+            color: #e2edf8;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .main-header nav a:hover,
+        .main-header nav a.active {
+            color: white;
+            background: #254761;
+        }
+
+        /* =========================
+           MAIN PAGE
+        ========================= */
+
+        .page-container {
+            width: 90%;
+            max-width: 1050px;
+            margin: 35px auto 60px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            color: #1769aa;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .page-heading {
+            margin-bottom: 30px;
+        }
+
+        .eyebrow {
+            margin-bottom: 8px;
+            color: #1769aa;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 12px;
+            color: #102a43;
+            font-size: clamp(30px, 4vw, 42px);
+            line-height: 1.2;
+            letter-spacing: -0.7px;
+        }
+
+        .page-heading > p {
+            max-width: 720px;
+            margin: 0;
+            color: #64748b;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        /* =========================
+           BOOKING FORM CARD
+        ========================= */
+
+        .form-container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 36px;
+            background: #ffffff;
+            border: 1px solid #e1e8f0;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(16, 42, 67, 0.07);
+        }
+
+        .form-container > h2 {
+            margin: 0 0 5px;
+            color: #102a43;
+            font-size: 25px;
+        }
+
+        .form-container > p {
+            margin: 0 0 23px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* =========================
+           SERVER AND FORM MESSAGES
+        ========================= */
+
+        .message {
+            margin: 15px 0 24px;
+            padding: 13px 16px;
+            border: 1px solid #d7e6f7;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #1e40af;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .message:empty,
+        .message[hidden] {
+            display: none;
+        }
+
+        /* =========================
+           FORM SECTIONS
+        ========================= */
+
+        .form-section {
+            margin-top: 28px;
+            padding-top: 25px;
+            border-top: 1px solid #e8edf3;
+        }
+
+        .section-heading {
+            margin-bottom: 20px;
+        }
+
+        .section-heading h3 {
+            margin: 0 0 4px;
+            color: #102a43;
+            font-size: 19px;
+        }
+
+        .section-heading p {
+            margin: 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(130px, 0.7fr);
+            gap: 22px;
+        }
+
+        .form-group {
+            min-width: 0;
+            margin-bottom: 21px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 9px;
+            color: #334155;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select {
+            display: block;
+            width: 100%;
+            min-height: 51px;
+            padding: 13px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #1e293b;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #1769aa;
+            box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.13);
+        }
+
+        .form-group select:disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .form-help {
+            display: block;
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        /* =========================
+           ROUTE SECTION
+        ========================= */
+
+        .route-fields {
+            padding: 22px;
+            background: #f8fafc;
+            border: 1px solid #e5edf5;
+            border-radius: 13px;
+        }
+
+        .route-fields .form-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .form-actions button,
+        .btn {
+            min-height: 47px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 9px;
+            background: #1769aa;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .form-actions button:hover:not(:disabled),
+        .btn-primary:hover {
+            background: #104e82;
+            transform: translateY(-1px);
+        }
+
+        .form-actions button:disabled {
+            background: #a9bacb;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #e8eef5;
+            color: #334155;
+        }
+
+        .btn-secondary:hover {
+            background: #d8e2ed;
+            color: #102a43;
+        }
+
+        /* =========================
+           TRAIN DETAILS
+        ========================= */
+
+        #trainSelect {
+            margin-bottom: 5px;
+        }
+
+        .route-summary {
+            margin-top: 17px;
+            padding: 20px;
+            background: #eff6ff;
+            border: 1px solid #cfe2fa;
+            border-left: 4px solid #1769aa;
+            border-radius: 11px;
+        }
+
+        .route-summary strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #102a43;
+            font-size: 17px;
+        }
+
+        .route-summary p {
+            margin: 5px 0;
+            color: #475569;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .route-summary .form-help {
+            margin-top: 12px;
+        }
+
+        /* =========================
+           BOOKING RESULT
+        ========================= */
+
+        .result-panel {
+            margin-top: 28px;
+            padding: 28px;
+            border: 1px solid #b7e4ce;
+            border-radius: 14px;
+            background: #f0fdf4;
+        }
+
+        .result-panel h3 {
+            margin: 0 0 12px;
+            color: #166534;
+            font-size: 23px;
+        }
+
+        .result-panel p {
+            color: #334155;
+            line-height: 1.7;
+        }
+
+        .ticket-number {
+            display: inline-block;
+            margin: 8px 0;
+            padding: 12px 20px;
+            border: 1px dashed #16a34a;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #166534;
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .site-footer {
+            margin-top: 30px;
+            padding: 25px 15px;
+            border-top: 1px solid #e1e8f0;
+            background: #ffffff;
+            color: #64748b;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .site-footer strong {
+            color: #102a43;
+        }
+
+        /* =========================
+           RESPONSIVE DESIGN
+        ========================= */
+
+        @media (max-width: 760px) {
+            .main-header {
+                padding: 17px 5%;
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 13px;
+            }
+
+            .main-header nav {
+                width: 100%;
+                gap: 5px;
+            }
+
+            .main-header nav a {
+                padding: 9px 10px;
+                font-size: 12px;
+            }
+
+            .page-container {
+                width: 92%;
+                margin-top: 25px;
+            }
+
+            .form-container {
+                padding: 26px 22px;
+            }
+
+            .form-row {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 0;
+            }
+
+            .route-fields {
+                padding: 17px;
+            }
+
+            .route-fields .form-row {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand h1 {
+                font-size: 21px;
+            }
+
+            .brand-mark {
+                width: 44px;
+                height: 44px;
+            }
+
+            .page-heading h1 {
+                font-size: 31px;
+            }
+
+            .page-heading > p {
+                font-size: 14px;
+            }
+
+            .form-container {
+                padding: 22px 17px;
+                border-radius: 14px;
+            }
+
+            .form-container > h2 {
+                font-size: 22px;
+            }
+
+            .form-actions {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .form-actions button,
+            .form-actions .btn {
+                width: 100%;
+            }
+
+            .ticket-number {
+                font-size: 21px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="header-inner">
-            <a href="index.html" class="site-logo">
-                <span class="logo-mark">RC</span>
-                <span>RailConnect</span>
-            </a>
 
-            <nav class="main-navigation">
-                <a href="passenger.html">Passenger Portal</a>
-                <a href="my-bookings.html">My Bookings</a>
-            </nav>
-        </div>
+    <header class="main-header">
+        <a class="brand" href="index.html" aria-label="RailConnect home">
+            <div class="brand-mark" aria-hidden="true">🚆</div>
+            <div>
+                <h1>RailConnect</h1>
+                <p>Your journey starts here</p>
+            </div>
+        </a>
+
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="passenger.html">Passenger Dashboard</a>
+            <a href="my-bookings.html">My Bookings</a>
+        </nav>
     </header>
 
     <main class="page-container">
-        <section class="page-title">
-            <span class="eyebrow">PASSENGER SERVICES</span>
-            <h1>Book your train ticket</h1>
-            <p>Enter your details and choose your journey.</p>
+
+        <a class="back-link" href="passenger.html">
+            ← Back to Passenger Dashboard
+        </a>
+
+        <section class="page-heading">
+            <div class="eyebrow">Passenger services</div>
+
+            <h1>Book your next journey.</h1>
+
+            <p>
+                A few simple steps to your next trip. Enter your details,
+                select your route, and choose an available train.
+                Your ticket number will be generated automatically
+                when your booking is processed.
+            </p>
         </section>
 
-        <div class="booking-layout">
-            <section class="dashboard-card booking-form-card">
-                <h2>Passenger details</h2>
-                <p class="form-description">
-                    Complete the fields below to make a reservation.
-                </p>
+        <section class="form-container">
 
-                <form id="bookingForm">
-                    <div class="form-group">
-                        <label for="passengerName">Full name</label>
-                        <input
-                            type="text"
-                            id="passengerName"
-                            name="passengerName"
-                            placeholder="Enter passenger name"
-                            required
-                        >
+            <h2>Passenger details</h2>
+
+            <p>Complete the required fields below to reserve your ticket.</p>
+
+            <div id="serverMessage" class="message" role="status">
+                Connecting to the reservation server...
+            </div>
+
+            <form id="bookingForm">
+
+                <!-- PASSENGER INFORMATION -->
+
+                <div class="form-section">
+                    <div class="section-heading">
+                        <h3>01. Personal information</h3>
+                        <p>Enter the details of the person travelling.</p>
                     </div>
 
                     <div class="form-row">
+
                         <div class="form-group">
-                            <label for="passengerAge">Age</label>
+                            <label for="passengerName">Full name *</label>
+
+                            <input
+                                type="text"
+                                id="passengerName"
+                                name="name"
+                                placeholder="Enter passenger's full name"
+                                maxlength="59"
+                                autocomplete="name"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passengerAge">Age *</label>
+
                             <input
                                 type="number"
                                 id="passengerAge"
-                                name="passengerAge"
+                                name="age"
+                                placeholder="Enter age"
                                 min="1"
                                 max="120"
-                                placeholder="Age"
                                 required
                             >
                         </div>
 
-                        <div class="form-group">
-                            <label for="passengerId">Passenger ID</label>
-                            <input
-                                type="text"
-                                id="passengerId"
-                                name="passengerId"
-                                placeholder="e.g. P101"
-                                required
-                            >
-                        </div>
                     </div>
-
-                    <h2 class="form-section-title">Journey details</h2>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="source">From</label>
-                            <select id="source" name="source" required>
-                                <option value="">Select source</option>
-                                <option value="Kochi">Kochi</option>
-                                <option value="Kottayam">Kottayam</option>
-                                <option value="Thrissur">Thrissur</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="destination">To</label>
-                            <select id="destination" name="destination" required>
-                                <option value="">Select destination</option>
-                                <option value="Kochi">Kochi</option>
-                                <option value="Kottayam">Kottayam</option>
-                                <option value="Thrissur">Thrissur</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        id="findTrainsButton"
-                        class="button button-secondary"
-                    >
-                        Find Trains
-                    </button>
-
-                    <p id="trainSearchMessage" role="status"></p>
 
                     <div class="form-group">
-                        <label for="trainSelect">Available train</label>
-                        <select id="trainSelect" name="trainSelect" required>
-                            <option value="">Choose a route first</option>
+                        <label for="passengerId">Passenger ID *</label>
+
+                        <input
+                            type="text"
+                            id="passengerId"
+                            name="passengerId"
+                            placeholder="Example: P101"
+                            maxlength="39"
+                            autocomplete="off"
+                            required
+                        >
+
+                        <span class="form-help">
+                            Remember this ID. You will use the same ID
+                            to find and manage your bookings.
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ROUTE SELECTION -->
+
+                <div class="form-section">
+
+                    <div class="section-heading">
+                        <h3>02. Choose your route</h3>
+                        <p>Select your departure and destination stations.</p>
+                    </div>
+
+                    <div class="route-fields">
+                        <div class="form-row">
+
+                            <div class="form-group">
+                                <label for="source">From *</label>
+
+                                <select id="source" name="source" required>
+                                    <option value="">
+                                        Select departure station
+                                    </option>
+                                    <option value="Kochi">Kochi</option>
+                                    <option value="Kottayam">Kottayam</option>
+                                    <option value="Thrissur">Thrissur</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="destination">To *</label>
+
+                                <select
+                                    id="destination"
+                                    name="destination"
+                                    required
+                                >
+                                    <option value="">
+                                        Select destination station
+                                    </option>
+                                    <option value="Kochi">Kochi</option>
+                                    <option value="Kottayam">Kottayam</option>
+                                    <option value="Thrissur">Thrissur</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" id="findTrainsButton">
+                                Find available trains →
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        id="trainSearchMessage"
+                        class="message"
+                        hidden
+                        role="status"
+                    ></div>
+
+                </div>
+
+                <!-- TRAIN SELECTION -->
+
+                <div class="form-section">
+
+                    <div class="section-heading">
+                        <h3>03. Select your train</h3>
+                        <p>
+                            Choose from the trains available for your route.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="trainSelect">Available trains *</label>
+
+                        <select id="trainSelect" name="trainId" required disabled>
+                            <option value="">
+                                Find trains for your route first
+                            </option>
                         </select>
                     </div>
 
-                    <div id="trainSummary" class="train-summary" hidden>
-                        <h3 id="selectedTrainName"></h3>
+                    <div id="trainSummary" class="route-summary" hidden>
+                        <strong id="selectedTrainName"></strong>
                         <p id="selectedTrainRoute"></p>
                         <p id="selectedTrainSeats"></p>
+
+                        <p class="form-help">
+                            If all seats are occupied, your booking may be
+                            placed in the waiting queue.
+                        </p>
                     </div>
 
-                    <p id="serverMessage" role="status"></p>
+                </div>
+
+                <!-- FORM ACTIONS -->
+
+                <div class="form-section">
+
+                    <div class="form-actions">
+                        <button
+                            type="submit"
+                            id="bookTicketButton"
+                            disabled
+                        >
+                            Confirm booking
+                        </button>
+
+                        <a
+                            class="btn btn-secondary"
+                            href="passenger.html"
+                        >
+                            Cancel
+                        </a>
+                    </div>
+
+                    <span class="form-help">
+                        Please check your passenger and route details
+                        before confirming your booking.
+                    </span>
+
+                </div>
+
+            </form>
+
+            <!-- BOOKING RESULT -->
+
+            <section
+                id="bookingResult"
+                class="result-panel"
+                hidden
+                aria-live="polite"
+            >
+                <h3 id="resultHeading">Booking result</h3>
+
+                <p id="resultMessage"></p>
+
+                <p>Automatically generated ticket number:</p>
+
+                <div id="resultTicket" class="ticket-number"></div>
+
+                <p id="resultSeat"></p>
+                <p id="resultStatus"></p>
+
+                <div class="form-actions">
+                    <a href="my-bookings.html" class="btn btn-primary">
+                        View my bookings
+                    </a>
 
                     <button
-                        type="submit"
-                        id="bookTicketButton"
-                        class="button button-primary"
+                        type="button"
+                        id="newBookingButton"
+                        class="btn btn-secondary"
                     >
-                        Confirm Reservation
+                        Book another ticket
                     </button>
-                </form>
+                </div>
             </section>
 
-            <aside class="booking-side-panel">
-                <div class="dashboard-card booking-info-card">
-                    <span class="eyebrow">HOW IT WORKS</span>
-                    <h2>Simple, clear booking</h2>
-
-                    <ul class="booking-steps">
-                        <li>
-                            <span>01</span>
-                            <div>
-                                <strong>Enter your details</strong>
-                                <p>Provide your name, age, and Passenger ID.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <span>02</span>
-                            <div>
-                                <strong>Choose your train</strong>
-                                <p>Check the route and current seat availability.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <span>03</span>
-                            <div>
-                                <strong>Get your result</strong>
-                                <p>Receive a ticket reference or waiting-list reference.</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="booking-note">
-                    <strong>Good to know</strong>
-                    <p>
-                        If all seats are occupied, your reservation will be
-                        placed on the waiting list. Waiting passengers are
-                        promoted in order when a confirmed seat is cancelled.
-                    </p>
-                </div>
-            </aside>
-        </div>
-
-        <section id="bookingResult" class="booking-result" hidden>
-            <div class="booking-result-heading">
-                <span class="eyebrow">BOOKING UPDATE</span>
-                <h2 id="resultHeading">Reservation result</h2>
-                <p id="resultMessage"></p>
-            </div>
-
-            <div class="booking-result-details">
-                <div>
-                    <span>Ticket / Waiting Reference</span>
-                    <strong id="resultTicket">—</strong>
-                </div>
-
-                <div>
-                    <span>Seat Number</span>
-                    <strong id="resultSeat">—</strong>
-                </div>
-
-                <div>
-                    <span>Status</span>
-                    <strong id="resultStatus">—</strong>
-                </div>
-            </div>
-
-            <div class="result-actions">
-                <a href="my-bookings.html" class="button button-primary">
-                    View My Bookings
-                </a>
-
-                <button
-                    type="button"
-                    id="newBookingButton"
-                    class="button button-secondary"
-                >
-                    Book Another Ticket
-                </button>
-            </div>
         </section>
+
     </main>
 
     <footer class="site-footer">
-        <div class="footer-inner">
-            <a href="index.html" class="footer-logo">RailConnect</a>
-            <p>Making railway reservations simpler.</p>
-            <span>&copy; 2026 RailConnect</span>
-        </div>
+        <p>
+            <strong>RailConnect</strong> ·
+            Data Structures Railway Reservation System
+        </p>
     </footer>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const form = document.getElementById("bookingForm");
-            const sourceSelect = document.getElementById("source");
-            const destinationSelect = document.getElementById("destination");
-            const trainSelect = document.getElementById("trainSelect");
-            const findButton = document.getElementById("findTrainsButton");
-            const bookButton = document.getElementById("bookTicketButton");
-            const trainSummary = document.getElementById("trainSummary");
-            const searchMessage = document.getElementById("trainSearchMessage");
-            const serverMessage = document.getElementById("serverMessage");
-            const bookingResult = document.getElementById("bookingResult");
-
-            function clearTrainSelection() {
-                trainSelect.innerHTML =
-                    '<option value="">Choose a route first</option>';
-
-                trainSummary.hidden = true;
-                bookButton.disabled = true;
-            }
-
-            function findTrains() {
-                const source = sourceSelect.value;
-                const destination = destinationSelect.value;
-
-                searchMessage.textContent = "";
-                serverMessage.textContent = "";
-                bookingResult.hidden = true;
-                clearTrainSelection();
-
-                if (!source || !destination) {
-                    searchMessage.textContent =
-                        "Please select both the source and destination.";
-                    return;
-                }
-
-                if (source === destination) {
-                    searchMessage.textContent =
-                        "Source and destination must be different.";
-                    return;
-                }
-
-                const trains = getAllTrains().filter(function (train) {
-                    return train.source === source &&
-                           train.destination === destination;
-                });
-
-                if (trains.length === 0) {
-                    searchMessage.textContent =
-                        "No trains are available for this route.";
-                    return;
-                }
-
-                trainSelect.innerHTML =
-                    '<option value="">Select a train</option>';
-
-                trains.forEach(function (train) {
-                    const summary = getTrainSummary(train.id);
-                    const option = document.createElement("option");
-
-                    option.value = train.id;
-                    option.textContent =
-                        train.name + " (Train " + train.id + ")";
-
-                    trainSelect.appendChild(option);
-                });
-
-                searchMessage.textContent =
-                    trains.length + " train(s) found. Choose one below.";
-            }
-
-            function updateTrainSummary() {
-                const trainId = trainSelect.value;
-
-                serverMessage.textContent = "";
-                bookingResult.hidden = true;
-
-                if (!trainId) {
-                    trainSummary.hidden = true;
-                    bookButton.disabled = true;
-                    return;
-                }
-
-                const summary = getTrainSummary(trainId);
-
-                if (!summary) {
-                    trainSummary.hidden = true;
-                    bookButton.disabled = true;
-                    return;
-                }
-
-                document.getElementById("selectedTrainName").textContent =
-                    summary.train.name + " · Train " + summary.train.id;
-
-                document.getElementById("selectedTrainRoute").textContent =
-                    summary.train.source + " → " + summary.train.destination;
-
-                document.getElementById("selectedTrainSeats").textContent =
-                    summary.availableSeats + " seat(s) available · " +
-                    summary.waitingPassengers + " passenger(s) waiting";
-
-                trainSummary.hidden = false;
-                bookButton.disabled = false;
-            }
-
-            findButton.addEventListener("click", findTrains);
-            trainSelect.addEventListener("change", updateTrainSummary);
-
-            sourceSelect.addEventListener("change", function () {
-                clearTrainSelection();
-                searchMessage.textContent = "";
-            });
-
-            destinationSelect.addEventListener("change", function () {
-                clearTrainSelection();
-                searchMessage.textContent = "";
-            });
-
-            form.addEventListener("submit", function (event) {
-                event.preventDefault();
-
-                const name = document.getElementById("passengerName").value.trim();
-                const age = Number(document.getElementById("passengerAge").value);
-                const passengerId = document.getElementById("passengerId").value.trim();
-                const trainId = trainSelect.value;
-
-                serverMessage.textContent = "";
-                bookingResult.hidden = true;
-
-                if (!trainId) {
-                    serverMessage.textContent =
-                        "Please find and select a train before booking.";
-                    return;
-                }
-
-                if (!form.reportValidity()) {
-                    return;
-                }
-
-                const result = bookTicket({
-                    name: name,
-                    age: age,
-                    passengerId: passengerId,
-                    trainId: trainId
-                });
-
-                if (!result || !result.success) {
-                    serverMessage.textContent =
-                        result && result.message
-                            ? result.message
-                            : "Booking failed. Please try again.";
-                    return;
-                }
-
-                document.getElementById("resultHeading").textContent =
-                    result.status === "Confirmed"
-                        ? "Your ticket is confirmed"
-                        : "You have joined the waiting list";
-
-                document.getElementById("resultMessage").textContent =
-                    result.message;
-
-                document.getElementById("resultTicket").textContent =
-                    result.reference || "—";
-
-                document.getElementById("resultSeat").textContent =
-                    result.seat !== null && result.seat !== undefined
-                        ? result.seat
-                        : "Not assigned";
-
-                document.getElementById("resultStatus").textContent =
-                    result.status;
-
-                bookingResult.hidden = false;
-                serverMessage.textContent = "";
-
-                updateTrainSummary();
-
-                bookingResult.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-            });
-
-            document.getElementById("newBookingButton")
-                .addEventListener("click", function () {
-                    form.reset();
-                    clearTrainSelection();
-                    searchMessage.textContent = "";
-                    serverMessage.textContent = "";
-                    bookingResult.hidden = true;
-
-                    window.scrollTo({
-                        top: 0,
-                        behavior: "smooth"
-                    });
-                });
-
-            clearTrainSelection();
-        });
-    </script>
 </body>
 </html>

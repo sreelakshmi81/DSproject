@@ -4,171 +4,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Choose Your Portal | RailConnect</title>
-
     <link rel="stylesheet" href="style.css">
+    <style>
+        .role-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background:
+                radial-gradient(ellipse at top left, #e3efff, transparent 45%),
+                #f3f6fb;
+        }
+
+        .role-header {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 19px 7%;
+            color: white;
+            background: #102a43;
+        }
+
+        .role-logo {
+            width: 45px;
+            height: 45px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: #254761;
+            font-size: 25px;
+        }
+
+        .role-header h2 {
+            font-size: 24px;
+        }
+
+        .role-main {
+            width: 90%;
+            max-width: 1000px;
+            margin: 55px auto;
+            flex: 1;
+        }
+
+        .role-intro {
+            text-align: center;
+            margin-bottom: 38px;
+        }
+
+        .role-intro .eyebrow {
+            color: #1769aa;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+
+        .role-intro h1 {
+            color: #102a43;
+            font-size: clamp(30px, 4vw, 40px);
+            margin-bottom: 12px;
+        }
+
+        .role-intro p {
+            color: #64748b;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .portal-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 27px;
+        }
+
+        .portal-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background: white;
+            padding: 34px;
+            border: 1px solid #dce5ef;
+            border-radius: 18px;
+            box-shadow: 0 6px 24px rgba(16,42,67,.07);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 32px rgba(16,42,67,.11);
+        }
+
+        .portal-icon {
+            width: 64px;
+            height: 64px;
+            display: grid;
+            place-items: center;
+            border-radius: 17px;
+            font-size: 30px;
+            margin-bottom: 24px;
+        }
+
+        .passenger-portal-icon {
+            background: #e6f0ff;
+        }
+
+        .admin-portal-icon {
+            background: #dff7f1;
+        }
+
+        .portal-card h2 {
+            color: #102a43;
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .portal-card p {
+            color: #64748b;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 22px;
+        }
+
+        .portal-list {
+            list-style: none;
+            margin-bottom: 28px;
+            display: grid;
+            gap: 11px;
+        }
+
+        .portal-list li {
+            color: #334155;
+            font-size: 14px;
+        }
+
+        .portal-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: auto;
+            padding: 15px 18px;
+            border-radius: 10px;
+            background: #1769aa;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            transition: background .2s;
+        }
+
+        .portal-button:hover {
+            background: #104e82;
+        }
+
+        .admin-portal-button {
+            background: #087f75;
+        }
+
+        .admin-portal-button:hover {
+            background: #06665f;
+        }
+
+        .role-back {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #1769aa;
+            font-weight: 600;
+        }
+
+        .role-back:hover {
+            text-decoration: underline;
+        }
+
+        .role-footer {
+            padding: 23px;
+            text-align: center;
+            color: #64748b;
+            border-top: 1px solid #dce5ef;
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            .role-main {
+                margin: 32px auto;
+            }
+
+            .portal-options {
+                grid-template-columns: 1fr;
+            }
+
+            .portal-card {
+                padding: 27px;
+            }
+        }
+    </style>
 </head>
 
-<body class="portal-page">
+<body class="role-page">
 
-    <header class="site-header">
-        <div class="header-inner">
-            <a href="index.html" class="site-logo">
-                <span class="logo-mark">RC</span>
-                <span>RailConnect</span>
-            </a>
-
-            <a href="index.html" class="header-back">
-                <span aria-hidden="true">&larr;</span> Home
-            </a>
-        </div>
+    <header class="role-header">
+        <div class="role-logo">🚆</div>
+        <h2>RailConnect</h2>
     </header>
 
-    <main class="portal-main">
-        <section class="portal-intro">
-            <span class="eyebrow">WELCOME TO RAILCONNECT</span>
+    <main class="role-main">
 
+        <a href="index.html" class="role-back">
+            ← Back to Welcome Page
+        </a>
+
+        <section class="role-intro">
+            <p class="eyebrow">WELCOME TO RAILCONNECT</p>
             <h1>How would you like to continue?</h1>
-
             <p>
-                Select a portal to manage railway reservations
-                or access administration features.
+                Choose your portal to get started with RailConnect.
             </p>
         </section>
 
-        <section class="portal-grid" aria-label="Choose a portal">
+        <section class="portal-options">
 
-            <article class="portal-card passenger-portal">
-                <div class="portal-card-top">
-                    <span class="portal-icon" aria-hidden="true">♙</span>
-                    <span class="portal-tag">FOR TRAVELLERS</span>
-                </div>
+            <article class="portal-card">
+                <div class="portal-icon passenger-portal-icon">👤</div>
 
-                <h2>Passenger Portal</h2>
+                <h2>Continue as Passenger</h2>
 
                 <p>
-                    Book a train, check your ticket details,
-                    view your reservations, and cancel a booking.
+                    Plan your journey, book train tickets, check
+                    seat availability, and manage your reservations.
                 </p>
 
-                <ul class="portal-features">
-                    <li><span>✓</span> Book available seats</li>
-                    <li><span>✓</span> Check booking status</li>
-                    <li><span>✓</span> Manage your reservations</li>
+                <ul class="portal-list">
+                    <li>✓ Book a train ticket</li>
+                    <li>✓ View confirmed and waiting-list bookings</li>
+                    <li>✓ Find or cancel your ticket</li>
                 </ul>
 
-                <a href="passenger.html" class="button button-primary portal-button">
-                    Continue as Passenger
-                    <span aria-hidden="true">&rarr;</span>
+                <a href="passenger.html" class="portal-button">
+                    Passenger Portal <span>→</span>
                 </a>
             </article>
 
-            <article class="portal-card admin-portal">
-                <div class="portal-card-top">
-                    <span class="portal-icon" aria-hidden="true">▦</span>
-                    <span class="portal-tag">SYSTEM MANAGEMENT</span>
-                </div>
+            <article class="portal-card">
+                <div class="portal-icon admin-portal-icon">🛡️</div>
 
-                <h2>Admin Portal</h2>
+                <h2>Continue as Admin</h2>
 
                 <p>
-                    Monitor train occupancy, review passenger
-                    reservations, and manage waiting lists.
+                    Monitor train occupancy, review reservations,
+                    manage waiting queues, and search ticket records.
                 </p>
 
-                <ul class="portal-features">
-                    <li><span>✓</span> View train statistics</li>
-                    <li><span>✓</span> Search reservations</li>
-                    <li><span>✓</span> Manage bookings</li>
+                <ul class="portal-list">
+                    <li>✓ View train statistics</li>
+                    <li>✓ Check passenger and waiting lists</li>
+                    <li>✓ Search and manage tickets</li>
                 </ul>
 
-                <a href="admin.html" class="button button-primary portal-button">
-                    Continue as Admin
-                    <span aria-hidden="true">&rarr;</span>
+                <a href="admin.html"
+                   class="portal-button admin-portal-button">
+                    Admin Portal <span>→</span>
                 </a>
             </article>
 
         </section>
 
-        <section class="available-trains-section">
-            <div class="available-trains-heading">
-                <div>
-                    <span class="eyebrow">PLAN YOUR JOURNEY</span>
-                    <h2>Available trains</h2>
-                </div>
-
-                <span class="train-count">2 trains</span>
-            </div>
-
-            <div class="available-trains-grid">
-
-                <article class="available-train-card">
-                    <div class="train-card-heading">
-                        <div>
-                            <span class="train-id">TRAIN 101</span>
-                            <h3>Coastal Express</h3>
-                        </div>
-                        <span class="train-symbol" aria-hidden="true">↗</span>
-                    </div>
-
-                    <div class="train-route-display">
-                        <div>
-                            <span class="station-caption">FROM</span>
-                            <strong>Kochi</strong>
-                        </div>
-
-                        <span class="train-route-line" aria-hidden="true"></span>
-
-                        <div class="train-destination">
-                            <span class="station-caption">TO</span>
-                            <strong>Kottayam</strong>
-                        </div>
-                    </div>
-
-                    <a href="booking.html" class="train-book-link">
-                        Book this train <span aria-hidden="true">&rarr;</span>
-                    </a>
-                </article>
-
-                <article class="available-train-card">
-                    <div class="train-card-heading">
-                        <div>
-                            <span class="train-id">TRAIN 202</span>
-                            <h3>City Link</h3>
-                        </div>
-                        <span class="train-symbol" aria-hidden="true">↗</span>
-                    </div>
-
-                    <div class="train-route-display">
-                        <div>
-                            <span class="station-caption">FROM</span>
-                            <strong>Kochi</strong>
-                        </div>
-
-                        <span class="train-route-line" aria-hidden="true"></span>
-
-                        <div class="train-destination">
-                            <span class="station-caption">TO</span>
-                            <strong>Thrissur</strong>
-                        </div>
-                    </div>
-
-                    <a href="booking.html" class="train-book-link">
-                        Book this train <span aria-hidden="true">&rarr;</span>
-                    </a>
-                </article>
-
-            </div>
-        </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <a href="index.html" class="footer-logo">RailConnect</a>
-            <p>Making railway reservations simpler.</p>
-            <span>&copy; 2026 RailConnect</span>
-        </div>
+    <footer class="role-footer">
+        RailConnect · Railway Reservation System
     </footer>
 
 </body>

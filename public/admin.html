@@ -5,288 +5,475 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | RailConnect</title>
-
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+
+    <style>
+        /* Header and RailConnect branding */
+        .admin-header {
+            background: #102a43;
+            color: white;
+            padding: 16px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            box-shadow: 0 3px 15px rgba(16, 42, 67, 0.12);
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .admin-brand-mark {
+            width: 49px;
+            height: 49px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #254761;
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 14px;
+            font-size: 26px;
+        }
+
+        .admin-brand h2 {
+            margin: 0;
+            color: white;
+            font-size: 23px;
+        }
+
+        .admin-brand p {
+            margin: 2px 0 0;
+            color: #d9e7f5;
+            font-size: 12px;
+        }
+
+        .admin-header-label {
+            padding: 9px 14px;
+            background: #254761;
+            border-radius: 8px;
+            color: #e2edf8;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Dashboard spacing */
+        .admin-main {
+            width: 90%;
+            max-width: 1200px;
+            margin: 38px auto;
+        }
+
+        .admin-intro {
+            margin-bottom: 28px;
+        }
+
+        .admin-intro h1 {
+            margin-bottom: 10px;
+            color: #102a43;
+            font-size: clamp(28px, 4vw, 36px);
+        }
+
+        .admin-intro p {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        .admin-section {
+            margin-top: 36px;
+        }
+
+        .admin-section-title {
+            margin-bottom: 18px;
+            color: #102a43;
+            font-size: 23px;
+        }
+
+        .admin-train-card {
+            cursor: default;
+        }
+
+        .admin-train-card p {
+            line-height: 1.9;
+        }
+
+        .admin-search-card {
+            margin-top: 36px;
+        }
+
+        .admin-search-card h2 {
+            color: #102a43;
+            margin-bottom: 10px;
+        }
+
+        .admin-search-card > p {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        .admin-footer {
+            margin-top: 40px;
+            padding: 24px 15px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .admin-footer strong {
+            color: #102a43;
+        }
+
+        @media (max-width: 600px) {
+            .admin-header {
+                padding: 16px 5%;
+            }
+
+            .admin-brand h2 {
+                font-size: 21px;
+            }
+
+            .admin-main {
+                width: 92%;
+                margin: 28px auto;
+            }
+
+            .admin-header-label {
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="header-inner">
-            <a href="index.html" class="site-logo">
-                <span class="logo-mark">RC</span>
-                <span>RailConnect</span>
-            </a>
 
-            <nav class="main-navigation">
-                <a href="role-selection.html">Choose Portal</a>
-                <a href="index.html">Home</a>
-            </nav>
+    <!-- RailConnect header with logo on the top left -->
+    <header class="admin-header">
+
+        <a class="admin-brand" href="index.html"
+           aria-label="RailConnect home">
+
+            <div class="admin-brand-mark" aria-hidden="true">🚆</div>
+
+            <div>
+                <h2>RailConnect</h2>
+                <p>Your journey starts here</p>
+            </div>
+
+        </a>
+
+        <div class="admin-header-label">
+            Admin Dashboard
         </div>
+
     </header>
 
-    <main class="page-container">
-        <section class="page-title">
-            <span class="eyebrow">ADMINISTRATION</span>
-            <h1>Railway management</h1>
-            <p>Monitor reservations, seat availability, and waiting lists.</p>
-        </section>
+    <main class="admin-main">
 
-        <section class="admin-stats-grid" aria-label="Reservation statistics">
-            <article class="dashboard-card stat-card">
-                <span class="stat-label">Total Reservations</span>
-                <strong id="totalPassengers" class="stat-value">—</strong>
-                <span class="stat-caption">Confirmed and waiting</span>
-            </article>
-
-            <article class="dashboard-card stat-card">
-                <span class="stat-label">Confirmed Tickets</span>
-                <strong id="confirmedTickets" class="stat-value">—</strong>
-                <span class="stat-caption">Seats currently assigned</span>
-            </article>
-
-            <article class="dashboard-card stat-card">
-                <span class="stat-label">Available Seats</span>
-                <strong id="availableSeats" class="stat-value">—</strong>
-                <span class="stat-caption">Across both trains</span>
-            </article>
-
-            <article class="dashboard-card stat-card">
-                <span class="stat-label">Waiting List</span>
-                <strong id="waitingPassengers" class="stat-value">—</strong>
-                <span class="stat-caption">Awaiting a confirmed seat</span>
-            </article>
-        </section>
-
-        <section class="admin-trains-section">
-            <div class="section-heading">
-                <div>
-                    <span class="eyebrow">FLEET OVERVIEW</span>
-                    <h2>Train status</h2>
-                </div>
-            </div>
-
-            <div class="admin-train-grid">
-                <article class="dashboard-card admin-train-card">
-                    <div class="admin-train-heading">
-                        <span class="train-id-label">TRAIN 101</span>
-                        <span class="status-label confirmed">Active</span>
-                    </div>
-
-                    <h3>Coastal Express</h3>
-                    <p class="train-route-text">Kochi → Kottayam</p>
-
-                    <div class="train-stat-row">
-                        <span>Confirmed</span>
-                        <strong id="coastalConfirmed">—</strong>
-                    </div>
-
-                    <div class="train-stat-row">
-                        <span>Available seats</span>
-                        <strong id="coastalAvailable">—</strong>
-                    </div>
-
-                    <div class="train-stat-row">
-                        <span>Waiting passengers</span>
-                        <strong id="coastalWaiting">—</strong>
-                    </div>
-
-                    <a
-                        href="train-details.html?train=101"
-                        class="button button-secondary"
-                    >
-                        View Train Details →
-                    </a>
-                </article>
-
-                <article class="dashboard-card admin-train-card">
-                    <div class="admin-train-heading">
-                        <span class="train-id-label">TRAIN 202</span>
-                        <span class="status-label confirmed">Active</span>
-                    </div>
-
-                    <h3>City Link</h3>
-                    <p class="train-route-text">Kochi → Thrissur</p>
-
-                    <div class="train-stat-row">
-                        <span>Confirmed</span>
-                        <strong id="cityConfirmed">—</strong>
-                    </div>
-
-                    <div class="train-stat-row">
-                        <span>Available seats</span>
-                        <strong id="cityAvailable">—</strong>
-                    </div>
-
-                    <div class="train-stat-row">
-                        <span>Waiting passengers</span>
-                        <strong id="cityWaiting">—</strong>
-                    </div>
-
-                    <a
-                        href="train-details.html?train=202"
-                        class="button button-secondary"
-                    >
-                        View Train Details →
-                    </a>
-                </article>
-            </div>
-        </section>
-
-        <section class="dashboard-card admin-search-card">
-            <span class="eyebrow">RESERVATION LOOKUP</span>
-            <h2>Search a ticket</h2>
+        <section class="admin-intro">
+            <h1>Admin Dashboard</h1>
             <p>
-                Search using the full reference, such as TA-1001,
-                TB-1001, or WL-1001.
+                Monitor trains, manage reservations, and search tickets.
+            </p>
+        </section>
+
+        <!-- Overall statistics -->
+        <section class="admin-section">
+
+            <h2 class="admin-section-title">Reservation Overview</h2>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h3>Total Passengers</h3>
+                    <p class="stat-number" id="totalPassengers">10</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Confirmed Tickets</h3>
+                    <p class="stat-number" id="confirmedTickets">8</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Available Seats</h3>
+                    <p class="stat-number" id="availableSeats">2</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Waiting List</h3>
+                    <p class="stat-number" id="waitingPassengers">2</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Train overview -->
+        <section class="admin-section">
+
+            <h2 class="admin-section-title">Train Management</h2>
+
+            <div class="dashboard-grid">
+
+                <div class="dashboard-card admin-train-card">
+                    <h3>101 - Coastal Express</h3>
+
+                    <p>
+                        Route: Kochi to Kottayam<br>
+                        Capacity: 5 seats<br>
+                        Confirmed: <span id="coastalConfirmed">5</span><br>
+                        Available: <span id="coastalAvailable">0</span><br>
+                        Waiting: <span id="coastalWaiting">2</span>
+                    </p>
+
+                    <button onclick="openTrainDetails('101')">
+                        View Train Details
+                    </button>
+                </div>
+
+                <div class="dashboard-card admin-train-card">
+                    <h3>202 - City Link</h3>
+
+                    <p>
+                        Route: Kochi to Thrissur<br>
+                        Capacity: 5 seats<br>
+                        Confirmed: <span id="cityConfirmed">3</span><br>
+                        Available: <span id="cityAvailable">2</span><br>
+                        Waiting: <span id="cityWaiting">0</span>
+                    </p>
+
+                    <button onclick="openTrainDetails('202')">
+                        View Train Details
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Search any ticket -->
+        <section class="dashboard-card admin-search-card">
+
+            <h2>Search a Ticket</h2>
+
+            <p>
+                Enter a ticket number to find its reservation details.
             </p>
 
-            <form id="adminSearchForm" class="admin-search-form">
-                <div class="form-group">
-                    <label for="ticketNumber">Ticket reference</label>
-                    <input
-                        type="text"
-                        id="ticketNumber"
-                        placeholder="Enter ticket reference"
-                        required
-                    >
-                </div>
+            <div class="search-container">
 
-                <button type="submit" class="button button-primary">
-                    Search
+                <input
+                    type="number"
+                    id="ticketNumber"
+                    placeholder="Enter ticket number"
+                    min="1"
+                >
+
+                <button onclick="searchTicket()">
+                    Search Ticket
                 </button>
-            </form>
+
+            </div>
 
             <p id="searchMessage" role="status"></p>
-            <div id="searchResult" class="search-result" hidden></div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticket No.</th>
+                            <th>Passenger</th>
+                            <th>Train</th>
+                            <th>Seat</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="searchResult">
+                        <tr>
+                            <td colspan="6">
+                                Search a ticket to view its details.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </section>
+
+        <div class="action-buttons">
+            <button
+                class="secondary-button"
+                onclick="window.location.href='role-selection.html'"
+            >
+                ← Back to Portal Selection
+            </button>
+        </div>
+
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <a href="index.html" class="footer-logo">RailConnect</a>
-            <p>Making railway reservations simpler.</p>
-            <span>&copy; 2026 RailConnect</span>
-        </div>
+    <footer class="admin-footer">
+        <p>
+            <strong>RailConnect</strong> ·
+            Data Structures Railway Reservation System
+        </p>
     </footer>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function setText(id, value) {
-                const element = document.getElementById(id);
+        /*
+          Temporary demonstration records.
+          The C backend will replace these later.
+        */
 
-                if (element) {
-                    element.textContent = value;
-                }
+        const demoReservations = [
+            {
+                ticket: 1001,
+                passenger: "Anu",
+                trainId: "101",
+                trainName: "Coastal Express",
+                seat: 1,
+                status: "Confirmed"
+            },
+            {
+                ticket: 1002,
+                passenger: "Meera",
+                trainId: "101",
+                trainName: "Coastal Express",
+                seat: 2,
+                status: "Confirmed"
+            },
+            {
+                ticket: 1003,
+                passenger: "Rahul",
+                trainId: "202",
+                trainName: "City Link",
+                seat: 1,
+                status: "Confirmed"
+            },
+            {
+                ticket: 1004,
+                passenger: "Arun",
+                trainId: "101",
+                trainName: "Coastal Express",
+                seat: null,
+                status: "Waiting List"
+            }
+        ];
+
+        function openTrainDetails(trainId) {
+            window.location.href =
+                "train-details.html?train=" + encodeURIComponent(trainId);
+        }
+
+        function searchTicket() {
+            const ticketNumber = Number(
+                document.getElementById("ticketNumber").value
+            );
+
+            const message = document.getElementById("searchMessage");
+            const result = document.getElementById("searchResult");
+
+            message.textContent = "";
+            result.innerHTML = "";
+
+            if (!Number.isInteger(ticketNumber) || ticketNumber <= 0) {
+                message.textContent =
+                    "Please enter a valid ticket number.";
+
+                result.innerHTML =
+                    '<tr><td colspan="6">No search performed.</td></tr>';
+                return;
             }
 
-            function refreshDashboard() {
-                const state = getRailwayState();
+            const reservation = demoReservations.find(function(item) {
+                return item.ticket === ticketNumber;
+            });
 
-                setText("totalPassengers", state.totalPassengers);
-                setText("confirmedTickets", state.confirmedTickets);
-                setText("waitingPassengers", state.waitingPassengers);
+            if (!reservation) {
+                message.textContent =
+                    "Ticket not found in the demonstration records.";
 
-                let totalAvailableSeats = 0;
-
-                state.trains.forEach(function (train) {
-                    const summary = getTrainSummary(train.id);
-
-                    if (!summary) {
-                        return;
-                    }
-
-                    totalAvailableSeats += summary.availableSeats;
-
-                    if (train.id === "101") {
-                        setText("coastalConfirmed", summary.confirmedPassengers);
-                        setText("coastalAvailable", summary.availableSeats);
-                        setText("coastalWaiting", summary.waitingPassengers);
-                    }
-
-                    if (train.id === "202") {
-                        setText("cityConfirmed", summary.confirmedPassengers);
-                        setText("cityAvailable", summary.availableSeats);
-                        setText("cityWaiting", summary.waitingPassengers);
-                    }
-                });
-
-                setText("availableSeats", totalAvailableSeats);
+                result.innerHTML =
+                    '<tr><td colspan="6">No matching ticket found.</td></tr>';
+                return;
             }
 
-            function searchTicket() {
-                const reference =
-                    document.getElementById("ticketNumber").value.trim();
+            const row = document.createElement("tr");
 
-                const message = document.getElementById("searchMessage");
-                const resultBox = document.getElementById("searchResult");
+            const values = [
+                reservation.ticket,
+                reservation.passenger,
+                reservation.trainId + " - " + reservation.trainName,
+                reservation.seat === null ? "-" : reservation.seat,
+                reservation.status
+            ];
 
-                message.textContent = "";
-                resultBox.hidden = true;
-                resultBox.innerHTML = "";
+            values.forEach(function(value, index) {
+                const cell = document.createElement("td");
 
-                if (!reference) {
-                    message.textContent = "Please enter a ticket reference.";
-                    return;
+                if (index === 4) {
+                    const status = document.createElement("span");
+
+                    status.textContent = value;
+                    status.className =
+                        value === "Confirmed"
+                            ? "status confirmed"
+                            : "status waiting";
+
+                    cell.appendChild(status);
+                } else {
+                    cell.textContent = value;
                 }
 
-                const booking = searchBooking(reference);
+                row.appendChild(cell);
+            });
 
-                if (!booking) {
-                    message.textContent =
-                        "No reservation found. Check the reference and try again.";
-                    return;
-                }
+            const actionCell = document.createElement("td");
+            const cancelButton = document.createElement("button");
 
-                const train = getTrainById(booking.trainId);
+            cancelButton.textContent = "Cancel";
+            cancelButton.className = "cancel-button";
 
-                const heading = document.createElement("h3");
-                heading.textContent = booking.reference || "Reservation";
-                resultBox.appendChild(heading);
+            cancelButton.addEventListener("click", function() {
+                cancelTicket(reservation.ticket);
+            });
 
-                const details = [
-                    ["Passenger", booking.name],
-                    ["Passenger ID", booking.passengerId],
-                    ["Train", train ? train.name + " (" + train.id + ")" : booking.trainId],
-                    ["Route", train ? train.source + " → " + train.destination : "—"],
-                    [
-                        "Seat",
-                        booking.seat !== null && booking.seat !== undefined
-                            ? booking.seat
-                            : "Not assigned"
-                    ],
-                    ["Status", booking.status]
-                ];
+            actionCell.appendChild(cancelButton);
+            row.appendChild(actionCell);
 
-                details.forEach(function (detail) {
-                    const line = document.createElement("p");
-                    const label = document.createElement("strong");
+            result.appendChild(row);
+            message.textContent = "Ticket found.";
+        }
 
-                    label.textContent = detail[0] + ": ";
-                    line.appendChild(label);
-                    line.appendChild(
-                        document.createTextNode(
-                            detail[1] === null || detail[1] === undefined
-                                ? "—"
-                                : String(detail[1])
-                        )
-                    );
+        function cancelTicket(ticketNumber) {
+            const reservation = demoReservations.find(function(item) {
+                return item.ticket === ticketNumber;
+            });
 
-                    resultBox.appendChild(line);
-                });
-
-                resultBox.hidden = false;
-                message.textContent = "Reservation found.";
+            if (!reservation) {
+                return;
             }
 
-            document.getElementById("adminSearchForm")
-                .addEventListener("submit", function (event) {
-                    event.preventDefault();
-                    searchTicket();
-                });
+            const confirmed = window.confirm(
+                "Cancel ticket " + ticketNumber +
+                " for " + reservation.passenger + "?"
+            );
 
-            refreshDashboard();
-        });
+            if (!confirmed) {
+                return;
+            }
+
+            document.getElementById("searchMessage").textContent =
+                "Demonstration only: actual cancellation and waiting-list " +
+                "promotion will be implemented in the C backend.";
+        }
     </script>
+
 </body>
 </html>

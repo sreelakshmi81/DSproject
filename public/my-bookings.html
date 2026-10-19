@@ -6,100 +6,656 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Bookings | RailConnect</title>
 
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --navy: #102a43;
+            --blue: #2563eb;
+            --light-blue: #eff6ff;
+            --background: #f3f6fb;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header and logo */
+
+        .header {
+            background: var(--navy);
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 14px rgba(16, 42, 67, 0.14);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            background: #ffffff;
+            color: var(--navy);
+            border-radius: 13px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 27px;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            font-size: 23px;
+            font-weight: 750;
+            letter-spacing: 0.3px;
+        }
+
+        .brand-tagline {
+            font-size: 12px;
+            color: #cbd5e1;
+            margin-top: 3px;
+        }
+
+        .header-label {
+            padding: 9px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 25px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        /* Main content */
+
+        .page-container {
+            width: min(1120px, 90%);
+            margin: 38px auto;
+            flex: 1;
+        }
+
+        .welcome-section {
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 750;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 9px;
+        }
+
+        .page-title {
+            font-size: clamp(27px, 4vw, 35px);
+            color: var(--navy);
+            margin-bottom: 9px;
+        }
+
+        .page-description {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .section-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            padding: 26px;
+            margin-bottom: 22px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.035);
+        }
+
+        .section-heading {
+            color: var(--navy);
+            font-size: 19px;
+            margin-bottom: 8px;
+        }
+
+        .section-description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        /* Form */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            color: #334155;
+            font-size: 14px;
+            font-weight: 650;
+            margin-bottom: 9px;
+        }
+
+        input {
+            width: 100%;
+            min-width: 0;
+            padding: 13px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            background: white;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .passenger-form-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: end;
+            gap: 18px;
+        }
+
+        .passenger-form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        button {
+            border: none;
+            border-radius: 9px;
+            padding: 12px 19px;
+            font-size: 14px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .primary-button {
+            background: var(--blue);
+            color: white;
+        }
+
+        .primary-button:hover {
+            background: #1d4ed8;
+        }
+
+        .secondary-button {
+            background: #e8eef6;
+            color: var(--navy);
+        }
+
+        .secondary-button:hover {
+            background: #dbe5f1;
+        }
+
+        .cancel-button {
+            background: #fff1f2;
+            color: #be123c;
+            padding: 8px 13px;
+            font-size: 12px;
+        }
+
+        .cancel-button:hover {
+            background: #ffe4e6;
+        }
+
+        /* Ticket search */
+
+        .search-container {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+        }
+
+        .search-container input {
+            height: 44px;
+        }
+
+        .message {
+            margin-top: 13px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
+        /* Reservations table */
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 720px;
+            border-collapse: collapse;
+            background: white;
+            font-size: 13px;
+        }
+
+        thead {
+            background: #f1f5f9;
+        }
+
+        th {
+            color: #475569;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        th, td {
+            padding: 16px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        td {
+            color: #475569;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        .confirmed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .waiting {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 25px;
+        }
+
+        .footer {
+            text-align: center;
+            background: white;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            padding: 20px;
+            font-size: 12px;
+            margin-top: auto;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 15px 5%;
+            }
+
+            .brand-logo {
+                width: 42px;
+                height: 42px;
+                font-size: 23px;
+            }
+
+            .brand-name {
+                font-size: 19px;
+            }
+
+            .brand-tagline {
+                font-size: 10px;
+            }
+
+            .header-label {
+                padding: 7px 10px;
+                font-size: 11px;
+            }
+
+            .page-container {
+                width: 92%;
+                margin: 27px auto;
+            }
+
+            .section-card {
+                padding: 19px;
+            }
+
+            .passenger-form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .passenger-form-row button {
+                width: 100%;
+            }
+
+            .search-container {
+                grid-template-columns: 1fr;
+            }
+
+            .search-container button {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        /*
+          Temporary demonstration data.
+          The C backend will supply the real records later.
+        */
+
+        const demoBookings = [
+            {
+                ticket: 1001,
+                passengerId: "P101",
+                trainId: "101",
+                trainName: "Coastal Express",
+                route: "Kochi - Kottayam",
+                seat: 1,
+                status: "Confirmed"
+            },
+            {
+                ticket: 1002,
+                passengerId: "P101",
+                trainId: "202",
+                trainName: "City Link",
+                route: "Kochi - Thrissur",
+                seat: null,
+                status: "Waiting List"
+            },
+            {
+                ticket: 1003,
+                passengerId: "P202",
+                trainId: "101",
+                trainName: "Coastal Express",
+                route: "Kochi - Kottayam",
+                seat: 2,
+                status: "Confirmed"
+            }
+        ];
+
+        let visibleBookings = [];
+
+        function loadBookings() {
+            const passengerId =
+                document.getElementById("passengerId").value.trim();
+
+            const table = document.getElementById("bookingTable");
+            const message = document.getElementById("bookingMessage");
+
+            table.innerHTML = "";
+            message.textContent = "";
+            document.getElementById("searchMessage").textContent = "";
+
+            if (!passengerId) {
+                message.textContent = "Please enter your Passenger ID.";
+                return;
+            }
+
+            visibleBookings = demoBookings.filter(function(booking) {
+                return booking.passengerId.toLowerCase() ===
+                       passengerId.toLowerCase();
+            });
+
+            displayBookings(visibleBookings);
+
+            if (visibleBookings.length === 0) {
+                message.textContent =
+                    "No bookings found for this Passenger ID.";
+            }
+        }
+
+        function displayBookings(bookings) {
+            const table = document.getElementById("bookingTable");
+            table.innerHTML = "";
+
+            if (bookings.length === 0) {
+                table.innerHTML =
+                    '<tr><td colspan="6">No bookings to display.</td></tr>';
+                return;
+            }
+
+            bookings.forEach(function(booking) {
+                const row = document.createElement("tr");
+
+                const ticketCell = document.createElement("td");
+                ticketCell.textContent = booking.ticket;
+                row.appendChild(ticketCell);
+
+                const trainCell = document.createElement("td");
+                trainCell.textContent =
+                    booking.trainId + " - " + booking.trainName;
+                row.appendChild(trainCell);
+
+                const routeCell = document.createElement("td");
+                routeCell.textContent = booking.route;
+                row.appendChild(routeCell);
+
+                const seatCell = document.createElement("td");
+                seatCell.textContent =
+                    booking.seat === null ? "-" : booking.seat;
+                row.appendChild(seatCell);
+
+                const statusCell = document.createElement("td");
+                const statusLabel = document.createElement("span");
+
+                statusLabel.textContent = booking.status;
+                statusLabel.className =
+                    booking.status === "Confirmed"
+                        ? "status confirmed"
+                        : "status waiting";
+
+                statusCell.appendChild(statusLabel);
+                row.appendChild(statusCell);
+
+                const actionCell = document.createElement("td");
+                const cancelButton = document.createElement("button");
+
+                cancelButton.textContent = "Cancel";
+                cancelButton.className = "cancel-button";
+
+                cancelButton.addEventListener("click", function() {
+                    cancelBooking(booking.ticket);
+                });
+
+                actionCell.appendChild(cancelButton);
+                row.appendChild(actionCell);
+
+                table.appendChild(row);
+            });
+        }
+
+        function searchTicket() {
+            const ticketNumber = Number(
+                document.getElementById("ticketSearch").value
+            );
+
+            const message = document.getElementById("searchMessage");
+
+            if (!Number.isInteger(ticketNumber) || ticketNumber <= 0) {
+                message.textContent = "Enter a valid ticket number.";
+                return;
+            }
+
+            const booking = visibleBookings.find(function(item) {
+                return item.ticket === ticketNumber;
+            });
+
+            if (booking) {
+                displayBookings([booking]);
+                message.textContent = "Ticket found.";
+            } else {
+                message.textContent =
+                    "Ticket not found in your displayed bookings.";
+            }
+        }
+
+        function cancelBooking(ticketNumber) {
+            const booking = visibleBookings.find(function(item) {
+                return item.ticket === ticketNumber;
+            });
+
+            if (!booking) {
+                return;
+            }
+
+            const confirmed = window.confirm(
+                "Are you sure you want to cancel ticket " +
+                ticketNumber + "?"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            document.getElementById("bookingMessage").textContent =
+                "This is demonstration data. Actual cancellation, seat " +
+                "release, and waiting-list promotion will work after " +
+                "connecting the C backend.";
+        }
+    </script>
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="header-inner">
-            <a href="index.html" class="site-logo">
-                <span class="logo-mark">RC</span>
-                <span>RailConnect</span>
-            </a>
 
-            <nav class="main-navigation">
-                <a href="passenger.html">Passenger Portal</a>
-                <a href="booking.html">Book a Ticket</a>
-            </nav>
+    <header class="header">
+        <div class="brand">
+            <div class="brand-logo" aria-hidden="true">🚆</div>
+            <div>
+                <div class="brand-name">RailConnect</div>
+                <div class="brand-tagline">Your journey, connected.</div>
+            </div>
         </div>
+
+        <div class="header-label">My Bookings</div>
     </header>
 
     <main class="page-container">
-        <section class="page-title">
-            <span class="eyebrow">PASSENGER SERVICES</span>
-            <h1>My bookings</h1>
-            <p>Find your reservations, check their status, or cancel a booking.</p>
+
+        <section class="welcome-section">
+            <p class="eyebrow">Passenger Portal</p>
+            <h1 class="page-title">My Bookings</h1>
+            <p class="page-description">
+                View your reservations, check ticket details, and manage
+                your train bookings in one place.
+            </p>
         </section>
 
-        <section class="dashboard-grid booking-search-grid">
-            <article class="dashboard-card">
-                <h2>Find my reservations</h2>
-                <p>Enter the Passenger ID used when booking.</p>
+        <!-- Passenger identification -->
+        <section class="section-card">
+            <h2 class="section-heading">Find Your Reservations</h2>
+            <p class="section-description">
+                Enter the Passenger ID used when booking your ticket.
+            </p>
 
-                <form id="passengerSearchForm">
-                    <div class="form-group">
-                        <label for="passengerId">Passenger ID</label>
-                        <input
-                            type="text"
-                            id="passengerId"
-                            placeholder="e.g. P101"
-                            required
-                        >
-                    </div>
-
-                    <button type="submit" class="button button-primary">
-                        Find Bookings
-                    </button>
-                </form>
-
-                <p id="bookingMessage" role="status"></p>
-            </article>
-
-            <article class="dashboard-card">
-                <h2>Search a ticket</h2>
-                <p>Use the complete ticket or waiting-list reference.</p>
-
-                <form id="ticketSearchForm">
-                    <div class="form-group">
-                        <label for="ticketSearch">Ticket reference</label>
-                        <input
-                            type="text"
-                            id="ticketSearch"
-                            placeholder="e.g. TA-1001 or WL-1001"
-                            required
-                        >
-                    </div>
-
-                    <button type="submit" class="button button-secondary">
-                        Search Ticket
-                    </button>
-                </form>
-
-                <p id="searchMessage" role="status"></p>
-                <div id="searchResult" class="search-result" hidden></div>
-            </article>
-        </section>
-
-        <section class="dashboard-card bookings-table-card">
-            <div class="table-heading">
-                <div>
-                    <span class="eyebrow">RESERVATION RECORDS</span>
-                    <h2>Booking details</h2>
+            <div class="passenger-form-row">
+                <div class="form-group">
+                    <label for="passengerId">Passenger ID</label>
+                    <input
+                        type="text"
+                        id="passengerId"
+                        placeholder="e.g. P101"
+                        autocomplete="off"
+                        required
+                    >
                 </div>
 
-                <span id="bookingCount" class="train-count">0 bookings</span>
+                <button
+                    class="primary-button"
+                    type="button"
+                    onclick="loadBookings()"
+                >
+                    View My Bookings
+                </button>
             </div>
 
-            <div class="table-responsive">
+            <p id="bookingMessage" class="message" role="status"></p>
+        </section>
+
+        <!-- Ticket search -->
+        <section class="section-card">
+            <h2 class="section-heading">Find a Ticket</h2>
+            <p class="section-description">
+                Search for a ticket number within your displayed reservations.
+            </p>
+
+            <div class="search-container">
+                <input
+                    type="number"
+                    id="ticketSearch"
+                    placeholder="Enter ticket number"
+                    min="1"
+                >
+
+                <button
+                    class="primary-button"
+                    type="button"
+                    onclick="searchTicket()"
+                >
+                    Search Ticket
+                </button>
+            </div>
+
+            <p id="searchMessage" class="message" role="status"></p>
+        </section>
+
+        <!-- Booking table -->
+        <section class="section-card">
+            <h2 class="section-heading">Your Reservations</h2>
+            <p class="section-description">
+                Your ticket number, train, route, seat allocation, and booking
+                status will appear here.
+            </p>
+
+            <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>Reference</th>
-                            <th>Passenger</th>
+                            <th>Ticket No.</th>
                             <th>Train</th>
                             <th>Route</th>
-                            <th>Seat</th>
+                            <th>Seat No.</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -107,8 +663,9 @@
 
                     <tbody id="bookingTable">
                         <tr>
-                            <td colspan="7">
-                                Search using your Passenger ID to view bookings.
+                            <td colspan="6">
+                                Enter your Passenger ID and select
+                                "View My Bookings".
                             </td>
                         </tr>
                     </tbody>
@@ -116,256 +673,21 @@
             </div>
         </section>
 
-        <p class="page-bottom-link">
-            <a href="booking.html">← Return to booking</a>
-        </p>
+        <div class="action-buttons">
+            <button
+                class="secondary-button"
+                type="button"
+                onclick="window.location.href='passenger.html'"
+            >
+                ← Back to Passenger Dashboard
+            </button>
+        </div>
+
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <a href="index.html" class="footer-logo">RailConnect</a>
-            <p>Making railway reservations simpler.</p>
-            <span>&copy; 2026 RailConnect</span>
-        </div>
+    <footer class="footer">
+        RailConnect | Railway Reservation System
     </footer>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const passengerForm = document.getElementById("passengerSearchForm");
-            const ticketForm = document.getElementById("ticketSearchForm");
-            const table = document.getElementById("bookingTable");
-            const bookingMessage = document.getElementById("bookingMessage");
-            const searchMessage = document.getElementById("searchMessage");
-            const searchResult = document.getElementById("searchResult");
-            const bookingCount = document.getElementById("bookingCount");
-
-            let currentPassengerId = "";
-
-            function createCell(text) {
-                const cell = document.createElement("td");
-                cell.textContent = text;
-                return cell;
-            }
-
-            function showEmptyTable(message) {
-                table.innerHTML = "";
-
-                const row = document.createElement("tr");
-                const cell = document.createElement("td");
-
-                cell.colSpan = 7;
-                cell.textContent = message;
-
-                row.appendChild(cell);
-                table.appendChild(row);
-                bookingCount.textContent = "0 bookings";
-            }
-
-            function displayBookings(bookings) {
-                table.innerHTML = "";
-
-                if (!bookings || bookings.length === 0) {
-                    showEmptyTable("No reservations found for this Passenger ID.");
-                    return;
-                }
-
-                bookingCount.textContent =
-                    bookings.length + (bookings.length === 1 ? " booking" : " bookings");
-
-                bookings.forEach(function (booking) {
-                    const row = document.createElement("tr");
-
-                    const reference = booking.reference || "—";
-                    const trainName =
-                        typeof getTrainName === "function"
-                            ? getTrainName(booking.trainId)
-                            : "Train " + booking.trainId;
-
-                    const train = getTrainById(booking.trainId);
-                    const route = train
-                        ? train.source + " → " + train.destination
-                        : "—";
-
-                    row.appendChild(createCell(reference));
-                    row.appendChild(createCell(booking.name || "—"));
-                    row.appendChild(createCell(trainName));
-                    row.appendChild(createCell(route));
-                    row.appendChild(
-                        createCell(
-                            booking.seat !== null && booking.seat !== undefined
-                                ? String(booking.seat)
-                                : "Not assigned"
-                        )
-                    );
-
-                    const statusCell = document.createElement("td");
-                    const statusLabel = document.createElement("span");
-                    statusLabel.className =
-                        "status-label " +
-                        (booking.status === "Confirmed"
-                            ? "confirmed"
-                            : booking.status === "Waiting List"
-                                ? "waiting"
-                                : "cancelled");
-
-                    statusLabel.textContent = booking.status;
-                    statusCell.appendChild(statusLabel);
-                    row.appendChild(statusCell);
-
-                    const actionCell = document.createElement("td");
-
-                    if (
-                        booking.status === "Confirmed" ||
-                        booking.status === "Waiting List"
-                    ) {
-                        const cancelButton = document.createElement("button");
-                        cancelButton.type = "button";
-                        cancelButton.className = "button button-danger";
-                        cancelButton.textContent = "Cancel";
-
-                        cancelButton.addEventListener("click", function () {
-                            cancelReservation(booking.reference);
-                        });
-
-                        actionCell.appendChild(cancelButton);
-                    } else {
-                        actionCell.textContent = "—";
-                    }
-
-                    row.appendChild(actionCell);
-                    table.appendChild(row);
-                });
-            }
-
-            function loadBookings() {
-                const passengerId = currentPassengerId.trim();
-
-                if (!passengerId) {
-                    showEmptyTable("Enter a Passenger ID to view bookings.");
-                    return;
-                }
-
-                const bookings = getBookingsByPassengerId(passengerId);
-
-                displayBookings(bookings);
-
-                bookingMessage.textContent = bookings.length
-                    ? "Found " + bookings.length + " reservation(s)."
-                    : "No reservations found for that Passenger ID.";
-            }
-
-            function cancelReservation(reference) {
-                const confirmed = window.confirm(
-                    "Are you sure you want to cancel reservation " +
-                    reference + "?"
-                );
-
-                if (!confirmed) {
-                    return;
-                }
-
-                const result = cancelBooking(reference);
-
-                if (!result.success) {
-                    bookingMessage.textContent = result.message;
-                    return;
-                }
-
-                bookingMessage.textContent = result.message;
-
-                loadBookings();
-
-                if (document.getElementById("ticketSearch").value.trim()) {
-                    searchTicket();
-                }
-            }
-
-            function searchTicket() {
-                const reference =
-                    document.getElementById("ticketSearch").value.trim();
-
-                searchMessage.textContent = "";
-                searchResult.hidden = true;
-                searchResult.innerHTML = "";
-
-                if (!reference) {
-                    searchMessage.textContent =
-                        "Enter a ticket or waiting-list reference.";
-                    return;
-                }
-
-                const booking = searchBooking(reference);
-
-                if (!booking) {
-                    searchMessage.textContent =
-                        "No reservation found. Check the full reference and try again.";
-                    return;
-                }
-
-                const train = getTrainById(booking.trainId);
-
-                searchResult.hidden = false;
-
-                const heading = document.createElement("h3");
-                heading.textContent = booking.reference;
-
-                const details = [
-                    ["Passenger", booking.name],
-                    ["Passenger ID", booking.passengerId],
-                    ["Train", train ? train.name + " (" + train.id + ")" : booking.trainId],
-                    ["Route", train ? train.source + " → " + train.destination : "—"],
-                    [
-                        "Seat",
-                        booking.seat !== null && booking.seat !== undefined
-                            ? String(booking.seat)
-                            : "Not assigned"
-                    ],
-                    ["Status", booking.status]
-                ];
-
-                searchResult.appendChild(heading);
-
-                details.forEach(function (detail) {
-                    const line = document.createElement("p");
-                    const label = document.createElement("strong");
-
-                    label.textContent = detail[0] + ": ";
-                    line.appendChild(label);
-                    line.appendChild(
-                        document.createTextNode(
-                            detail[1] === null || detail[1] === undefined
-                                ? "—"
-                                : String(detail[1])
-                        )
-                    );
-
-                    searchResult.appendChild(line);
-                });
-
-                searchMessage.textContent = "Reservation found.";
-            }
-
-            passengerForm.addEventListener("submit", function (event) {
-                event.preventDefault();
-
-                currentPassengerId =
-                    document.getElementById("passengerId").value.trim();
-
-                loadBookings();
-            });
-
-            ticketForm.addEventListener("submit", function (event) {
-                event.preventDefault();
-                searchTicket();
-            });
-
-            // Make these functions available to the buttons created above.
-            window.loadBookings = loadBookings;
-            window.searchTicket = searchTicket;
-
-            // Load the latest results after cancelling.
-            window.cancelReservation = cancelReservation;
-        });
-    </script>
 </body>
 </html>

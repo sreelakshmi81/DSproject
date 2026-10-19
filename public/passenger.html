@@ -4,165 +4,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Passenger Portal | RailConnect</title>
-
+    <title>Passenger Dashboard | RailConnect</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
 </head>
 
 <body class="passenger-page">
 
-    <header class="site-header">
-        <div class="header-inner">
-            <a href="index.html" class="site-logo">
-                <span class="logo-mark">RC</span>
-                <span>RailConnect</span>
-            </a>
+    <header class="header">
+        <a href="index.html" class="brand">
+            <span class="brand-icon">🚆</span>
+            <span>RailConnect</span>
+        </a>
 
-            <nav class="main-navigation">
-                <a href="role-selection.html">Choose Portal</a>
-                <a href="index.html">Home</a>
-            </nav>
-        </div>
+        <a href="index.html" class="header-home">← Home</a>
     </header>
 
-    <main class="passenger-container">
+    <main class="page-container passenger-container">
 
         <section class="passenger-welcome">
             <span class="welcome-label">PASSENGER PORTAL</span>
-
-            <h1>Your journeys, all in one place.</h1>
-
-            <p>
-                Book a train, manage your reservations, and check
-                your ticket details from your passenger dashboard.
-            </p>
+            <h1>Welcome aboard!</h1>
+            <p>Where would you like to go today?</p>
         </section>
 
-        <section class="dashboard-grid" aria-label="Passenger actions">
+        <section class="dashboard-grid passenger-dashboard">
 
-            <article class="dashboard-card">
-                <div class="card-icon" aria-hidden="true">↗</div>
+            <article class="dashboard-card passenger-action-card booking-card">
+                <div class="card-icon booking-icon">🎟️</div>
 
-                <span class="card-label">NEW RESERVATION</span>
-
+                <span class="card-label">PLAN YOUR JOURNEY</span>
                 <h2>Book a Ticket</h2>
 
                 <p>
-                    Choose your route, enter your passenger details,
-                    and reserve an available seat. If the train is full,
-                    you can join its waiting list.
+                    Choose your source and destination, explore available
+                    trains, and book your seat in just a few steps.
                 </p>
 
-                <a href="booking.html" class="button button-primary">
-                    Book Now <span aria-hidden="true">&rarr;</span>
-                </a>
+                <ul class="card-benefits">
+                    <li>✓ Select your preferred train</li>
+                    <li>✓ Check seat availability</li>
+                    <li>✓ Get your unique ticket number</li>
+                </ul>
+
+                <button class="passenger-button"
+                        onclick="openBooking()">
+                    Book Your Journey <span>→</span>
+                </button>
             </article>
 
-            <article class="dashboard-card">
-                <div class="card-icon" aria-hidden="true">▤</div>
+            <article class="dashboard-card passenger-action-card bookings-card">
+                <div class="card-icon history-icon">📋</div>
 
-                <span class="card-label">YOUR RESERVATIONS</span>
-
+                <span class="card-label">YOUR TRAVEL DETAILS</span>
                 <h2>My Bookings</h2>
 
                 <p>
-                    Find your reservations using your Passenger ID,
-                    check ticket numbers and seat assignments,
-                    or cancel an existing booking.
+                    Keep track of your reservations, check your booking
+                    status, and cancel a ticket when your plans change.
                 </p>
 
-                <a href="my-bookings.html" class="button button-secondary">
-                    View My Bookings
-                    <span aria-hidden="true">&rarr;</span>
-                </a>
+                <ul class="card-benefits">
+                    <li>✓ View confirmed tickets</li>
+                    <li>✓ Check waiting-list status</li>
+                    <li>✓ Manage your reservations</li>
+                </ul>
+
+                <button class="passenger-button secondary-passenger-button"
+                        onclick="openMyBookings()">
+                    View My Bookings <span>→</span>
+                </button>
             </article>
 
         </section>
 
-        <section class="train-list-section">
-            <div class="available-trains-heading">
-                <div>
-                    <span class="eyebrow">PLAN YOUR JOURNEY</span>
-                    <h2>Available trains</h2>
-                </div>
-            </div>
-
-            <div id="passengerTrainList" class="passenger-train-list">
-                <article class="passenger-train-item">
-                    <h3>Coastal Express</h3>
-                    <p>Kochi &rarr; Kottayam</p>
-                    <span class="text-muted">Train 101</span>
-                </article>
-
-                <article class="passenger-train-item">
-                    <h3>City Link</h3>
-                    <p>Kochi &rarr; Thrissur</p>
-                    <span class="text-muted">Train 202</span>
-                </article>
-            </div>
-        </section>
+        <div class="passenger-note">
+            <span>💡</span>
+            <p>
+                <strong>Travel tip:</strong> Keep your ticket number handy
+                to find your reservation quickly.
+            </p>
+        </div>
 
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <a href="index.html" class="footer-logo">RailConnect</a>
-            <p>Making railway reservations simpler.</p>
-            <span>&copy; 2026 RailConnect</span>
-        </div>
+    <footer class="footer passenger-footer">
+        <p>RailConnect <span>•</span> Railway Reservation System</p>
     </footer>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const trainList = document.getElementById("passengerTrainList");
+        function openBooking() {
+            window.location.href = "booking.html";
+        }
 
-            if (!trainList || typeof getAllTrains !== "function") {
-                return;
-            }
+        function openMyBookings() {
+            window.location.href = "my-bookings.html";
+        }
 
-            const trains = getAllTrains();
-
-            trainList.innerHTML = "";
-
-            trains.forEach(function (train) {
-                const summary = getTrainSummary(train.id);
-
-                const card = document.createElement("article");
-                card.className = "passenger-train-item";
-
-                const heading = document.createElement("h3");
-                heading.textContent = train.name;
-
-                const route = document.createElement("p");
-                route.textContent =
-                    train.source + " → " + train.destination;
-
-                const trainNumber = document.createElement("span");
-                trainNumber.className = "text-muted";
-                trainNumber.textContent = "Train " + train.id;
-
-                const availability = document.createElement("p");
-                availability.textContent = summary
-                    ? summary.availableSeats + " seats available · " +
-                      summary.waitingPassengers + " waiting"
-                    : "Availability unavailable";
-
-                const link = document.createElement("a");
-                link.className = "train-book-link";
-                link.href = "booking.html";
-                link.textContent = "Book this train →";
-
-                card.appendChild(heading);
-                card.appendChild(route);
-                card.appendChild(trainNumber);
-                card.appendChild(availability);
-                card.appendChild(link);
-
-                trainList.appendChild(card);
-            });
-        });
+        function goHome() {
+            window.location.href = "index.html";
+        }
     </script>
 
 </body>
